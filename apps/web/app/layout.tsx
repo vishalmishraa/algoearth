@@ -4,9 +4,10 @@
 import { Chivo } from "next/font/google";
 import { Rubik } from "next/font/google";
 import "./globals.css";
-import { Appbar } from "./components/Appbar";
+import { Appbar } from "../components/Appbar";
+import { cn } from "@/lib/utils";
 // import { Footer } from "../components/Footer";
-// import { Providers,ThemeProvider } from "../providers";
+import { Providers,ThemeProvider } from "../providers";
 
 const chivo = Chivo({
   subsets: ["latin"],
@@ -26,14 +27,15 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="en">
-      <body className={chivo.variable + " " + rubik.variable}>
-      {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <Providers> */}
-          <Appbar />
-          {children}
-          {/* <Footer />
+      <body className={cn(
+        "min-h-screen bg-background font-sans antialiased", chivo.variable + " " + rubik.variable)}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <Providers>
+        <Appbar />
+        {children}
+        {/* <Footer /> */}
         </Providers>
-      </ThemeProvider> */}
+      </ThemeProvider>
       </body>
     </html>
   );
