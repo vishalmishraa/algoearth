@@ -1,0 +1,22 @@
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 340.000000 250.000000" preserveAspectRatio="xMidYMid meet" color-interpolation-filters="sRGB" style="margin: auto;">
+    <rect x="0" y="0" width="100%" height="100%" fill="url(#watermark)" fill-opacity="1" class="watermarklayer"></rect>
+    <g fill="#1A1A1A" class="icon-text-wrapper icon-svg-group iconsvg" transform="translate(47.80113983154297,88.13545227050781)">
+        <g class="iconsvg-imagesvg" transform="translate(0,0)">
+            <g>
+                <rect fill="#1A1A1A" fill-opacity="0" stroke-width="2" x="0" y="0" width="60" height="73.72909472959854" class="image-rect"></rect>
+                <svg x="0" y="0" width="60" height="73.72909472959854" filtersec="colorsb5550734303" class="image-svg-svg primary" style="overflow: visible;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39.13999938964844 48.096214294433594">
+                        <title>a6</title>
+                        <g data-name="图层 2">
+                            <g data-name="Layer 1">
+                                <path d="M19.57 0C8.86 0 2.81 4.21 1.4 12.81h11.68c.61-2.19 2.9-3.25 7-3.25 4.83 0 7.28 1.32 7.55 3.95 0 2.54-2.54 4-7.55 4.65C8.34 19.31.26 22.29 0 33.43 0 43.7 7.72 48.88 18.87 48c12.55-.88 20.27-6.58 20.27-19.39v-15.8C38.87 4.21 32.38 0 19.57 0zm-2.19 38.52c-3.69 0-5.62-1.76-5.88-5.44 0-3.42 2.37-5.61 7-6.49a50.6 50.6 0 0 0 9.3-2.81c-.83 1.62-2.6 4.7-4.31 5.42 0 0 3.2-.34 4.31-2v.18c-.26 1-1.32 4.35-3.65 5.25a14.06 14.06 0 0 0 3.3-1.43c-1.09 4.68-4.71 7.32-10.07 7.32z" fill="#1a1a1a"></path>
+                                <path d="M24.35 27c-2.07.87-3.52.67-6.12 1.2-3.54.67-5.34 2.33-5.34 4.94.2 2.8 1.67 4.14 4.47 4.14 4.08 0 5.79-.81 8.1-4.23a14.75 14.75 0 0 1-4.32 1.12c1.77-.69 4.57-4.6 4.57-4.6-.84 1.26-4.52.51-4.52.51 1.31-.54 3.16-3.08 3.16-3.08z" fill="#ed1c24"></path>
+                            </g>
+                        </g>
+                    </svg>
+                </svg>
+            </g>
+        </g>
+    </g>
+    <defs v-gra="od"></defs>
+</svg>
