@@ -5,7 +5,7 @@ use std::fs::read_to_string;
     ##USER_CODE_HERE##
     
     fn main() -> io::Result<()> {
-      let input = read_to_string("/Users/vishal/Desktop/PROJECTS/algoearth3/apps/problems/sort-array/tests/inputs/##INPUT_FILE_INDEX##.txt")?;
+      let input = read_to_string("/dev/problems/sort-array/tests/inputs/##INPUT_FILE_INDEX##.txt")?;
       let mut lines = input.lines();
       let size_values: usize = lines.next().and_then(|line| line.parse().ok()).unwrap_or(0);
 	let values: Vec<i32> = parse_input(lines, size_values);

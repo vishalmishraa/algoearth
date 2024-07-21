@@ -147,7 +147,7 @@ function SubmitProblem({
                 token: token,
             });
             console.log("response from proState : ",response.data);
-            pollWithBackoff(response.data.id, 10);
+            pollWithBackoff(response.data.id, 30);
         } catch (e) {
             //@ts-ignore
             toast.error(e.response.statusText);

@@ -5,7 +5,11 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "dev:docker": "npm run prisma:docker && yarn dev",
+    "prisma:docker": "cd packages/db && npm prisma db push --force-reset && npm prisma db seed",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "start:web": "cd apps/web && npm run start",
+    "start:sweeper": "cd apps/sweeper && npm run start"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

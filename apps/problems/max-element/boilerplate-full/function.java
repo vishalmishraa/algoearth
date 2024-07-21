@@ -7,7 +7,7 @@
         ##USER_CODE_HERE##
     
         public static void main(String[] args) {
-            String filePath = "/Users/vishal/Desktop/PROJECTS/algoearth3/apps/problems/max-element/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
+            String filePath = "/dev/problems/max-element/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
             List<String> lines = readLinesFromFile(filePath);
             int size_arr = Integer.parseInt(lines.get(0).trim());
 

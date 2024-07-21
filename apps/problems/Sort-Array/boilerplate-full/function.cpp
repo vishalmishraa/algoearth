@@ -8,7 +8,7 @@
     ##USER_CODE_HERE##
     
     int main() {
-      std::ifstream file("/Users/vishal/Desktop/PROJECTS/algoearth3/apps/problems/sort-array/tests/inputs/##INPUT_FILE_INDEX##.txt");
+      std::ifstream file("/dev/problems/sort-array/tests/inputs/##INPUT_FILE_INDEX##.txt");
       std::vector<std::string> lines;
       std::string line;
       while (std::getline(file, line)) lines.push_back(line);

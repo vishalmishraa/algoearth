@@ -24,18 +24,6 @@ export async function POST(req: NextRequest) {
         );
     }
 
-    // //Get the user id
-    // const userId = session.user.id;
-    // //rateimit the user
-    // const isRateLimited = await rateLimit(userId, 1, 1000);//1 request per 10 sec
-    // if (isRateLimited) {
-    //     return NextResponse.json(
-    //         {
-    //             message: "Rate limit exceeded , Try again after some time",
-    //             status: 429
-    //         }
-    //     );
-    // };
 
     //get and check the submission input
     const submissionInput = SubmissionInput.safeParse(await req.json());
@@ -90,12 +78,6 @@ export async function POST(req: NextRequest) {
         }
     );
     
-    console.debug("response from judge0", response.data);
-
-    //search data in submissions table , with the response data
-    const existingSubmissions = await db.submissions.findMany();
-
-    console.debug("existingSubmissions", existingSubmissions , response.data[0].token);
 
     //create the submission in the database
     const submission = await db.submission.create({
@@ -158,7 +140,7 @@ export async function GET(req: NextRequest) {
             testcases: true,
         },
     });
-
+    
     if (!submission) {
         return NextResponse.json(
             {
