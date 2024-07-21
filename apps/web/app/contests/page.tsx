@@ -1,9 +1,9 @@
-import { Contests } from '@/components/Contests';
+import { Contests } from '@/app/components/Contests';
 
 const ContestsPage = () => {
   return (
     <div>
-        <Contests/>
+      <Contests />
     </div>
   )
 }

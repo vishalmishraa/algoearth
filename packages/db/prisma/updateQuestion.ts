@@ -40,6 +40,7 @@ async function main(problemSlug: string, problemTitle: string) {
       const code = await promisifedReadFile(
         `${MOUNT_PATH}/${problemSlug}/boilerplate/function.${language}`
       );
+
       await prismaClient.defaultCode.upsert({
         where: {
           problemId_languageId: {

@@ -235,14 +235,13 @@ export class FullBoilerPlateParser {
             .join("\n  ");
         const outputType = this.outputFields[0].type;
         const functionCall = `const result = ${this.functionName}(${this.inputFields.map((field) => field.name).join(", ")});`;
-        const outputWrite = `console.log(result);`;
 
         return `##USER_CODE_HERE##
     
     const input = require('fs').readFileSync('${PROBLEMS_DIR_PATH }/${this.problemName.toLowerCase().replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt', 'utf8').trim().split('\\n').join(' ').split(' ');
     ${inputReads}
     ${functionCall}
-    ${outputWrite}
+    console.log(result);
         `;
     }
 
@@ -327,30 +326,6 @@ export class FullBoilerPlateParser {
         main()
     `;
     };
-
-    generateJavascript(): string {
-        const inputs = this.inputFields.map((field) => field.name).join(", ");
-        const inputReads = this.inputFields
-            .map((field) => {
-                if (field.type.startsWith("list<")) {
-                    return `const size_${field.name} = parseInt(input.shift());\nconst ${field.name} = input.splice(0, size_${field.name}).map(Number);`;
-                } else {
-                    return `const ${field.name} = parseInt(input.shift());`;
-                }
-            })
-            .join("\n  ");
-        const outputType = this.outputFields[0].type;
-        const functionCall = `const result = ${this.functionName}(${this.inputFields.map((field) => field.name).join(", ")});`;
-        const outputWrite = `console.log(result);`;
-
-        return `##USER_CODE_HERE##
-        
-    const input = require('fs').readFileSync('/dev/problems/${this.problemName.toLowerCase().replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt', 'utf8').trim().split('\\n').join(' ').split(' ');
-    ${inputReads}
-    ${functionCall}
-    ${outputWrite}
-        `;
-    }
 
 
     makeTypeToC(type: string): string {

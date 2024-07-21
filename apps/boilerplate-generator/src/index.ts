@@ -73,7 +73,7 @@ function generatePartialBoilerplate(dirPath: string, folder: string) {
 
 function generateFullBoilerPlate(dirPath: string, folder: string){
     const template = path.join(dirPath, folder, 'template.md');
-    const boilerPlatePath = path.join(dirPath , folder, 'full-boilerplate');
+    const boilerPlatePath = path.join(dirPath , folder, 'boilerplate-full');
 
     //read the template file
     const templateContent = fs.readFileSync(template, 'utf-8');
@@ -87,7 +87,7 @@ function generateFullBoilerPlate(dirPath: string, folder: string){
     const javaCode = parser.generateJava();
     const rustCode = parser.generateRust();
     const pythonCode = parser.generatePython();
-    const javascriptCode = parser.generateJavascript();
+    const javascriptCode = parser.generateJs();
 
     //check if boilerplate directory exists
     if (!fs.existsSync(boilerPlatePath)) {
@@ -105,6 +105,7 @@ function generateFullBoilerPlate(dirPath: string, folder: string){
     console.log(`Full Boilerplate generated for ${folder}`);
 
 }
+
 
 if (!process.env.PROBLEMS_DIR_PATH) {
     console.log('PROBLEMS_DIR_PATH is not defined in .env file');

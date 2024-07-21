@@ -11,7 +11,9 @@ import languages from "../src/languages";
                 name: language,
                 judge0Id: LANGUAGE_MAPPING[language].judge0,
             })),
-        })
+        });
+
+        console.log("it runned");
     } catch (e) {
         console.log("Languages already persist in the DB!");
     }

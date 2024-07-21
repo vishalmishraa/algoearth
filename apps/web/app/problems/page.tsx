@@ -1,9 +1,9 @@
-import { Problems } from '@/components/Problems';
+import { Problems } from '@/app/components/Problems';
 
 const ProblemsPage = () => {
   return (
     <div>
-        <Problems/>
+      <Problems />
     </div>
   )
 }

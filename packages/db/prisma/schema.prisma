@@ -7,23 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum SubmissionResult {
-  AC
-  REJECTED
-  PENDING
-}
-
-enum UserRole {
-  ADMIN
-  USER
-}
-
-enum Difficulty {
-  EASY
-  MEDIUM
-  HARD
-}
-
 model User {
   id                 String              @id @default(cuid())
   email              String              @unique
@@ -38,35 +21,33 @@ model User {
   contestPoints      ContestPoints[]
 }
 
-model DefaultCode {
-  id         String   @id @default(cuid())
-  languageId Int
-  problemId  String
-  code       String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  problem    Problem  @relation(fields: [problemId], references: [id])
-  language   Language @relation(fields: [languageId], references: [id])
-
-  @@unique([problemId, languageId])
+model Contest {
+  id                 String              @id @default(cuid())
+  title              String
+  description        String
+  startTime          DateTime
+  hidden             Boolean             @default(true)
+  submissions        Submission[]
+  endTime            DateTime
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  problems           ContestProblem[]
+  contestSubmissions ContestSubmission[]
+  leaderboard        Boolean             @default(false)
 }
 
-model Language {
-  id          Int           @id @default(autoincrement())
-  name        String
-  judge0Id    Int           @unique
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  DefaultCode DefaultCode[]
-}
+model ContestProblem {
+  id        String
+  contestId String
+  problemId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  contest   Contest  @relation(fields: [contestId], references: [id])
+  problem   Problem  @relation(fields: [problemId], references: [id])
+  index     Int
+  solved    Int      @default(0)
 
-model languages {
-  id          Int      @id @default(autoincrement())
-  name        String?  @db.VarChar
-  compile_cmd String?  @db.VarChar
-  run_cmd     String?  @db.VarChar
-  source_file String?  @db.VarChar
-  is_archived Boolean? @default(false)
+  @@id([contestId, problemId])
 }
 
 model Problem {
@@ -85,6 +66,19 @@ model Problem {
   defaultCode        DefaultCode[]
 }
 
+model DefaultCode {
+  id         String   @id @default(cuid())
+  languageId Int
+  problemId  String
+  code       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  problem    Problem  @relation(fields: [problemId], references: [id])
+  language   Language @relation(fields: [languageId], references: [id])
+
+  @@unique([problemId, languageId])
+}
+
 model Submission {
   id              String           @id @default(cuid())
   problemId       String
@@ -100,6 +94,81 @@ model Submission {
   activeContest   Contest?         @relation(fields: [activeContestId], references: [id])
   user            User             @relation(fields: [userId], references: [id])
   problem         Problem          @relation(fields: [problemId], references: [id])
+}
+
+model Language {
+  id          Int           @id @default(autoincrement())
+  name        String
+  judge0Id    Int           @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  DefaultCode DefaultCode[]
+}
+
+model ContestSubmission {
+  id           String  @id @default(cuid())
+  userId       String
+  problemId    String
+  contestId    String
+  submissionId String // purely for auditing
+  points       Int
+  user         User    @relation(fields: [userId], references: [id])
+  problem      Problem @relation(fields: [problemId], references: [id])
+  contest      Contest @relation(fields: [contestId], references: [id])
+
+  @@unique([userId, problemId, contestId])
+}
+
+model ContestPoints {
+  id        String @id @default(cuid())
+  contestId String
+  userId    String
+  points    Int
+  rank      Int
+  user      User   @relation(fields: [userId], references: [id])
+
+  @@unique([contestId, userId])
+}
+
+enum SubmissionResult {
+  AC
+  REJECTED
+  PENDING
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model ar_internal_metadata {
+  key        String   @id @db.VarChar
+  value      String?  @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model clients {
+  id String @id @db.VarChar
+}
+
+model languages {
+  id          Int      @id @default(autoincrement())
+  name        String?  @db.VarChar
+  compile_cmd String?  @db.VarChar
+  run_cmd     String?  @db.VarChar
+  source_file String?  @db.VarChar
+  is_archived Boolean? @default(false)
+}
+
+model schema_migrations {
+  version String @id @db.VarChar
 }
 
 model submissions {
@@ -141,57 +210,4 @@ model submissions {
   submissionId                               String?
 
   @@index([token], map: "index_submissions_on_token")
-}
-
-model Contest {
-  id                 String              @id @default(cuid())
-  title              String
-  description        String
-  startTime          DateTime
-  hidden             Boolean             @default(true)
-  submissions        Submission[]
-  endTime            DateTime
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  problems           ContestProblem[]
-  contestSubmissions ContestSubmission[]
-  leaderboard        Boolean             @default(false)
-}
-
-model ContestProblem {
-  id        String
-  contestId String
-  problemId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  contest   Contest  @relation(fields: [contestId], references: [id])
-  problem   Problem  @relation(fields: [problemId], references: [id])
-  index     Int
-  solved    Int      @default(0)
-
-  @@id([contestId, problemId])
-}
-model ContestSubmission {
-  id           String  @id @default(cuid())
-  userId       String
-  problemId    String
-  contestId    String
-  submissionId String // purely for auditing
-  points       Int
-  user         User    @relation(fields: [userId], references: [id])
-  problem      Problem @relation(fields: [problemId], references: [id])
-  contest      Contest @relation(fields: [contestId], references: [id])
-
-  @@unique([userId, problemId, contestId])
-}
-
-model ContestPoints {
-  id        String @id @default(cuid())
-  contestId String
-  userId    String
-  points    Int
-  rank      Int
-  user      User   @relation(fields: [userId], references: [id])
-
-  @@unique([contestId, userId])
 }
