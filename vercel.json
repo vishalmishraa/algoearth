@@ -1,0 +1,13 @@
+{
+    "builds": [
+      {
+        "src": "packages/web/package.json",
+        "use": "@vercel/next"
+      },
+      {
+        "src": "packages/db/package.json",
+        "use": "@vercel/node"
+      }
+    ]
+  }
+  
