@@ -522,13 +522,13 @@
   resolved "https://registry.npmjs.org/@radix-ui/rect/-/rect-1.1.0.tgz"
   integrity sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==
 
-"@repo/common@file:/Users/vishal/Desktop/PROJECTS/algoearth3/packages/common":
+"@repo/common@file:/Users/vishal/Desktop/PROJECTS/algoearth/packages/common":
   version "1.0.0"
   resolved "file:packages/common"
   dependencies:
     zod "^3.23.8"
 
-"@repo/db@file:/Users/vishal/Desktop/PROJECTS/algoearth3/packages/db":
+"@repo/db@file:/Users/vishal/Desktop/PROJECTS/algoearth/packages/db":
   version "1.0.0"
   resolved "file:packages/db"
   dependencies:
@@ -992,7 +992,7 @@ binary-extensions@^2.0.0:
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.3.0.tgz"
   integrity sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==
 
-"boilerplate-generator@file:/Users/vishal/Desktop/PROJECTS/algoearth3/apps/boilerplate-generator":
+"boilerplate-generator@file:/Users/vishal/Desktop/PROJECTS/algoearth/apps/boilerplate-generator":
   version "1.0.0"
   resolved "file:apps/boilerplate-generator"
   dependencies:
@@ -4238,7 +4238,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-"sweeper@file:/Users/vishal/Desktop/PROJECTS/algoearth3/apps/sweeper":
+"sweeper@file:/Users/vishal/Desktop/PROJECTS/algoearth/apps/sweeper":
   version "1.0.0"
   resolved "file:apps/sweeper"
   dependencies:
@@ -4300,6 +4300,10 @@ tar@^6.1.11:
     minizlib "^2.1.1"
     mkdirp "^1.0.3"
     yallist "^4.0.0"
+
+"test@file:/Users/vishal/Desktop/PROJECTS/algoearth/apps/test":
+  version "1.0.0"
+  resolved "file:apps/test"
 
 text-table@^0.2.0:
   version "0.2.0"
@@ -4607,7 +4611,7 @@ vfile@^6.0.0:
     unist-util-stringify-position "^4.0.0"
     vfile-message "^4.0.0"
 
-"web@file:/Users/vishal/Desktop/PROJECTS/algoearth3/apps/web":
+"web@file:/Users/vishal/Desktop/PROJECTS/algoearth/apps/web":
   version "0.1.0"
   resolved "file:apps/web"
   dependencies:
@@ -4631,6 +4635,7 @@ vfile@^6.0.0:
     react-toastify "^10.0.5"
     tailwind-merge "^2.4.0"
     tailwindcss-animate "^1.0.7"
+    vconcol "^1.0.1"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

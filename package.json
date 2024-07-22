@@ -9,7 +9,8 @@
     "prisma:docker": "cd packages/db && npm prisma db push --force-reset && npm prisma db seed",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "start:web": "cd apps/web && npm run start",
-    "start:sweeper": "cd apps/sweeper && npm run start"
+    "start:sweeper": "cd apps/sweeper && npm run start",
+    "prisma:generate":"cd packages/db && npx prisma generate"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
