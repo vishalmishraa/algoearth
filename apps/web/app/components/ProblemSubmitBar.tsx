@@ -251,7 +251,7 @@ function testStatus(status: number | null) {
 
 function Submissions({ problem }: { problem: IProblem }) {
     const [submissions, setSubmissions] = useState<ISubmission[]>([]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const fetchData = async () => {
             const response = await axios.get(

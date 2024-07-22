@@ -1,4 +1,3 @@
-
 Problem Name: "Sort Array"
 Function Name: sortArray
 Input Structure:

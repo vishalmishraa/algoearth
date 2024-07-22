@@ -100,7 +100,7 @@ export class FullBoilerPlateParser {
                 ##USER_CODE_HERE##
                 
                 int main() {
-                    FILE *file = fopen("/dev/problems/${this.problemName.toLowerCase().replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt", "r");
+                    FILE *file = fopen("/dev/problems/${this.problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt", "r");
                     vector<string> lines;
                     string line;
                     while (fgets(line, sizeof(line), file)) lines.push_back(line);
@@ -141,7 +141,7 @@ export class FullBoilerPlateParser {
     ##USER_CODE_HERE##
     
     int main() {
-      std::ifstream file("/dev/problems/${this.problemName.toLowerCase().replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt");
+      std::ifstream file("/dev/problems/${this.problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt");
       std::vector<std::string> lines;
       std::string line;
       while (std::getline(file, line)) lines.push_back(line);
@@ -201,7 +201,7 @@ export class FullBoilerPlateParser {
         ##USER_CODE_HERE##
     
         public static void main(String[] args) {
-            String filePath = "/dev/problems/${this.problemName.toLowerCase().replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
+            String filePath = "/dev/problems/${this.problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
             List<String> lines = readLinesFromFile(filePath);
             ${inputReads}
             ${functionCall}
@@ -238,7 +238,7 @@ export class FullBoilerPlateParser {
 
         return `##USER_CODE_HERE##
     
-    const input = require('fs').readFileSync('/dev/problems/${this.problemName.toLowerCase().replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt', 'utf8').trim().split('\\n').join(' ').split(' ');
+    const input = require('fs').readFileSync('/dev/problems/${this.problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt', 'utf8').trim().split('\\n').join(' ').split(' ');
     ${inputReads}
     ${functionCall}
     console.log(result);
@@ -272,7 +272,7 @@ export class FullBoilerPlateParser {
     ##USER_CODE_HERE##
     
     fn main() -> io::Result<()> {
-      let input = read_to_string("/dev/problems/${this.problemName.toLowerCase().replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt")?;
+      let input = read_to_string("/dev/problems/${this.problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt")?;
       let mut lines = input.lines();
       ${inputReads}
       ${functionCall}

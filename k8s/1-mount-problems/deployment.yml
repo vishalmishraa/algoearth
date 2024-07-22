@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: add-problems
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: add-problems
+  template:
+    metadata:
+      labels:
+        app: add-problems
+    spec:
+      initContainers:
+      - name: copy-problems
+        image: vishal022/algoearth-problems:latest
+        command: ['sh', '-c', 'cp -r /usr/src/app/problems/* /problems']
+        volumeMounts:
+        - name: problems
+          mountPath: /problems 
+      containers:
+      - name: main-container
+        image: busybox
+        command: ['sh', '-c', 'sleep infinity']
+      volumes:
+      - name: problems
+        persistentVolumeClaim:
+          claimName: problems-pvc 
+---
+  

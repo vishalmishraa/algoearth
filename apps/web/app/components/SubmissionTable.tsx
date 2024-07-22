@@ -80,7 +80,7 @@ export function SubmissionTable({
         </TableHeader>
         <TableBody>
           {submissions.map((submission) => (
-            <TableRow>
+            <TableRow key={submission.id}>
               <TableCell>{submission.id.substr(0, 8)}</TableCell>
               <TableCell className={getColor(submission.status)}>
                 {getIcon(submission.status)}

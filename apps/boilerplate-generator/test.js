@@ -6,9 +6,9 @@ const path = require('path');
  * @param {Array<Object>} testCases - An array of test case objects.
  */
 function createTestDirectoriesAndFiles(testCases) {
-  const testDir = path.join("/Users/vishal/Desktop/PROJECTS/algoearth3/apps/problems/Find-Median", 'test');
-  const inputDir = path.join(testDir, 'input');
-  const outputDir = path.join(testDir, 'output');
+  const testDir = path.join("/Users/vishal/Desktop/PROJECTS/algoearth/apps/problems/Reverse-String", 'tests');
+  const inputDir = path.join(testDir, 'inputs');
+  const outputDir = path.join(testDir, 'outputs');
 
   // Create test, input, and output directories if they don't exist
   if (!fs.existsSync(testDir)) {
@@ -37,13 +37,30 @@ function createTestDirectoriesAndFiles(testCases) {
 
 // Example usage
 const testCases = [
-    { "input": [1, 3, 3, 6, 7, 8, 9], "output": 6 },
-    { "input": [1, 2, 3, 4, 5, 6, 7, 8], "output": 4.5 },
-    { "input": [-5, -3, -1, 2, 4, 6], "output": 0.5 },
-    { "input": [1], "output": 1 },
-    { "input": [], "output": null },
-    { "input": [2, 2, 2, 2], "output": 2 },
-    { "input": [-1, 0, 1], "output": 0 }
-  ]
+  {
+    "input": "hello",
+    "output": "olleh"
+  },
+  {
+    "input": "world",
+    "output": "dlrow"
+  },
+  {
+    "input": "12345",
+    "output": "54321"
+  },
+  {
+    "input": "A man a plan a canal Panama",
+    "output": "amanaP lanac a nalp a nam A"
+  },
+  {
+    "input": "",
+    "output": ""
+  },
+  {
+    "input": "racecar",
+    "output": "racecar"
+  }
+]
 
 createTestDirectoriesAndFiles(testCases);

@@ -5,7 +5,7 @@ use std::fs::read_to_string;
     ##USER_CODE_HERE##
     
     fn main() -> io::Result<()> {
-      let input = read_to_string("/dev/problems/find-median/tests/inputs/##INPUT_FILE_INDEX##.txt")?;
+      let input = read_to_string("/dev/problems/Find-Median/tests/inputs/##INPUT_FILE_INDEX##.txt")?;
       let mut lines = input.lines();
       let size_numbers: usize = lines.next().and_then(|line| line.parse().ok()).unwrap_or(0);
 	let numbers: Vec<i32> = parse_input(lines, size_numbers);

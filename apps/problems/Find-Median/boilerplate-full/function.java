@@ -7,7 +7,7 @@
         ##USER_CODE_HERE##
     
         public static void main(String[] args) {
-            String filePath = "/dev/problems/find-median/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
+            String filePath = "/dev/problems/Find-Median/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
             List<String> lines = readLinesFromFile(filePath);
             int size_numbers = Integer.parseInt(lines.get(0).trim());
 

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function Hero() {
@@ -10,7 +11,7 @@ export function Hero() {
               Welcome to Algo Earth
             </h1>
             <p className="text-gray-500 dark:text-gray-400 mb-6">
-              At AlgoEarth, we provide a seamless, engaging, and competitive environment to test and showcase your programming skills. Whether you're a beginner or an advanced coder, our platform is tailored to offer you the best experience.Ready to embark on your coding journey?
+              At AlgoEarth, we provide a seamless, engaging, and competitive environment to test and showcase your programming skills. Whether you&apos;re a beginner or an advanced coder, our platform is tailored to offer you the best experience.Ready to embark on your coding journey?
             </p>
             <div className="flex gap-4 pt-16">
               <Link
@@ -30,8 +31,8 @@ export function Hero() {
             </div>
           </div>
           <div className="hidden md:block">
-            <img
-              src="./hero.webp"
+            <Image
+              src="/hero.webp"
               width="700"
               height="500"
               alt="Code100x"

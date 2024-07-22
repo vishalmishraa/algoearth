@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: judge0-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: judge0
+      role: server
+  template:
+    metadata:
+      labels:
+        app: judge0
+        role: server
+    spec:        
+      containers:
+      - name: judge0-server
+        image: judge0/judge0:1.13.1
+        ports:
+        - containerPort: 2358
+        volumeMounts:
+        - name: problems-volume
+          mountPath: /dev/problems
+        - name: config-volume
+          mountPath: /judge0.conf
+          subPath: judge0.conf
+        env:
+        - name: REDIS_PASSWORD
+          value: "supersecurepassword"
+        - name: POSTGRES_DB
+          value: "algoearth"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "supersecurepassword"
+        - name: REDIS_HOST
+          value: "<check svc cluster port>"
+        - name: POSTGRES_HOST
+          value:  "<check svc cluster port>"
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
+          limits:
+            cpu: "500m"
+            memory: "500Mi"
+      volumes:
+      - name: problems-volume
+        persistentVolumeClaim:
+          claimName: problems-pvc 
+      - name: config-volume
+        configMap:
+          name: judge0-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: judge0-service
+  namespace: default
+spec:
+  selector:
+    app: judge0
+    role: server
+  ports:
+    - protocol: TCP
+      port: 2358
+      targetPort: 2358
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: judge0-workers
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: judge0
+      role: workers
+  template:
+    metadata:
+      labels:
+        app: judge0
+        role: workers
+    spec:
+      containers:
+        - name: judge0-workers
+          image: judge0/judge0:1.13.1
+          command: ["./scripts/workers"]
+          volumeMounts:
+            - name: problems-volume
+              mountPath: /dev/problems
+            - name: config-volume
+              mountPath: /judge0.conf
+              subPath: judge0.conf
+          env:
+            - name: REDIS_PASSWORD
+              value: "supersecurepassword"
+            - name: POSTGRES_DB
+              value: "algoearth"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "supersecurepassword"
+            - name: REDIS_HOST
+              value:  "<check svc cluster port>"
+            - name: POSTGRES_HOST
+              value:  "<check svc cluster port>"
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "200Mi"
+            limits:
+              cpu: "200m"
+              memory: "500Mi"
+      volumes:
+        - name: problems-volume
+          persistentVolumeClaim:
+            claimName: problems-pvc 
+        - name: config-volume
+          configMap:
+            name: judge0-config
+---
+

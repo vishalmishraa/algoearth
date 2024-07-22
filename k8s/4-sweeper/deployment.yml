@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sweeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sweeper
+  template:
+    metadata:
+      labels:
+        app: sweeper
+    spec:
+      containers:
+        - name: sweeper
+          image: vishal022/algoearth-sweeper:latest
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: algoearth-sw
+                  key: DATABASE_URL
