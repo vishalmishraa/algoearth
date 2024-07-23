@@ -18,7 +18,7 @@ export interface ISubmission {
   fullCode: string;
   status: string;
   testcases: {
-    status: string;
+    status_id: number;
     index: number;
   }[];
 }
@@ -88,7 +88,7 @@ export function SubmissionTable({
               <TableCell>
                 {
                   submission.testcases.filter(
-                    (testcase) => testcase.status === "AC",
+                    (testcase) => testcase.status_id === 3,
                   ).length
                 }
                 /{submission.testcases.length}
