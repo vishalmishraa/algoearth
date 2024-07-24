@@ -30,5 +30,16 @@ spec:
             name: judge0-service
             port:
               number: 2358
+  - host: algoearth.vishalmishra.tech
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: algoearth-web-service
+            port:
+              number: 3000
+      
 
     
