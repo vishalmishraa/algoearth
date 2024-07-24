@@ -22,9 +22,9 @@ export function Appbar() {
                 <Link href="/problems" className="hover:underline" prefetch={false}>
                     Problems
                 </Link>
-                <Link href="/standings" className="hover:underline" prefetch={false}>
+                {/* <Link href="/standings" className="hover:underline" prefetch={false}>
                     Standings
-                </Link>
+                </Link> */}
             </nav>
             {!isLoading && session?.user && (
                 <div className="flex items-center gap-4">
