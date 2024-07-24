@@ -3,11 +3,10 @@ import { SubmissionInput } from "@repo/common/zod";
 import { getProblem } from "../../lib/problems";
 import axios from "axios";
 import { LANGUAGE_MAPPING } from "@repo/common/language";
-import db from "@repo/db/client";
+import db from "@/app/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
-import { rateLimit } from "../../lib/rateLimit";
-import { Exo } from "next/font/google";
+
 
 const JUDGE0_URI = process.env.JUDGE0_URI;
 
@@ -42,6 +41,7 @@ export async function POST(req: NextRequest) {
             id: submissionInput.data.problemId,
         },
     });
+
     if (!dbProblem) {
         return NextResponse.json(
             {
@@ -140,6 +140,28 @@ export async function GET(req: NextRequest) {
             testcases: true,
         },
     });
+
+    if(submission?.status === "AC"){
+        const updatedProblem = await db.problem.update({
+            where: {
+                id: submission.problemId,
+            },
+            data: {
+                solved: {
+                    increment: 1
+                }
+            },
+        });
+
+        if (!updatedProblem) {
+            return NextResponse.json(
+                {
+                    message: "Problem not found or update failed",
+                    status: 404
+                }
+            );
+        }
+    }
     
     if (!submission) {
         return NextResponse.json(

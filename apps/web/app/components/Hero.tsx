@@ -35,7 +35,7 @@ export function Hero() {
               src="/hero.webp"
               width="700"
               height="500"
-              alt="Code100x"
+              alt="algoearth"
               className="rounded-lg"
             />
 
