@@ -4,6 +4,17 @@ on:
   push:
     branches:
       - 'main'
+    paths:
+      - 'apps/web/**'
+      - 'docker/web/**'
+      - '.github/workflows/push-web.yml'
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - 'apps/web/**'
+      - 'docker/web/**'
+      - '.github/workflows/push-web.yml'
     
 jobs:
   Deploy-web:
