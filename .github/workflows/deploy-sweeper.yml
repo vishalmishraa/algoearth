@@ -43,5 +43,5 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
           
 
-      - name: ReDeploy the Problems
+      - name: Redeploy the Problems
         run: kubectl rollout restart deployment/sweeper
