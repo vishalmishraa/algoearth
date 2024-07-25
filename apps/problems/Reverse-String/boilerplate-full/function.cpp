@@ -16,7 +16,7 @@
       file.close();
       std::string originalString;
   std::istringstream(lines[0]) >> originalString;
-      string result = reverseString(originalString);
+      std::string result = reverseString(originalString);
       std::cout << result << std::endl;
       return 0;
     }

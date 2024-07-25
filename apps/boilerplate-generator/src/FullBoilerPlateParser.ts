@@ -121,14 +121,14 @@ export class FullBoilerPlateParser {
         const inputReads = this.inputFields
             .map((field, index) => {
                 if (field.type.startsWith("list<")) {
-                    return `int size_${field.name};\n  std::istringstream(lines[${index}]) >> size_${field.name};\n  ${this.mapTypeToCpp(field.type)} ${field.name}(size_${field.name});\n  if(!size_${field.name}==0) {\n  \tstd::istringstream iss(lines[${index + 1}]);\n  \tfor (int i=0; i < size_arr; i++) iss >> arr[i];\n  }`;
+                    return `int size_${field.name};\n  std::istringstream(lines[${index}]) >> size_${field.name};\n  ${this.mapTypeToCpp(field.type)} ${field.name}(size_${field.name});\n  if(size_${field.name} != 0) {\n  \tstd::istringstream iss(lines[${index + 1}]);\n  \tfor (int i=0; i < size_${field.name}; i++) iss >> ${field.name}[i];\n  }`;
                 } else {
                     return `${this.mapTypeToCpp(field.type)} ${field.name};\n  std::istringstream(lines[${index}]) >> ${field.name};`;
                 }
             })
             .join("\n  ");
         const outputType = this.outputFields[0].type;
-        const functionCall = `${outputType} result = ${this.functionName}(${this.inputFields.map((field) => field.name).join(", ")});`;
+        const functionCall = `std::${outputType} result = ${this.functionName}(${this.inputFields.map((field) => field.name).join(", ")});`;
         const outputWrite = `std::cout << result << std::endl;`;
 
         return `#include <iostream>

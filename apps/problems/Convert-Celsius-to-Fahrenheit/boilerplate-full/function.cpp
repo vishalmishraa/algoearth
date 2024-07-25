@@ -16,7 +16,7 @@
       file.close();
       float celsius;
   std::istringstream(lines[0]) >> celsius;
-      float result = celsiusToFahrenheit(celsius);
+      std::float result = celsiusToFahrenheit(celsius);
       std::cout << result << std::endl;
       return 0;
     }

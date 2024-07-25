@@ -15,7 +15,7 @@
     
       file.close();
       
-      list<int> result = mergeSortedArrays();
+      std::list<int> result = mergeSortedArrays();
       std::cout << result << std::endl;
       return 0;
     }

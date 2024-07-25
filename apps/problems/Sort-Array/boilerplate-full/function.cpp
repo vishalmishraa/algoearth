@@ -17,11 +17,11 @@
       int size_values;
   std::istringstream(lines[0]) >> size_values;
   std::vector<int> values(size_values);
-  if(!size_values==0) {
+  if(size_values != 0) {
   	std::istringstream iss(lines[1]);
-  	for (int i=0; i < size_arr; i++) iss >> arr[i];
+  	for (int i=0; i < size_values; i++) iss >> values[i];
   }
-      list<int> result = sortArray(values);
+      std::list<int> result = sortArray(values);
       std::cout << result << std::endl;
       return 0;
     }

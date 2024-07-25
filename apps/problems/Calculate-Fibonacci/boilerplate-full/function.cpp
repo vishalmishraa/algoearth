@@ -16,7 +16,7 @@
       file.close();
       int n;
   std::istringstream(lines[0]) >> n;
-      int result = calculateFibonacci(n);
+      std::int result = calculateFibonacci(n);
       std::cout << result << std::endl;
       return 0;
     }

@@ -17,13 +17,13 @@
       int size_A;
   std::istringstream(lines[0]) >> size_A;
   std::vector<int> A(size_A);
-  if(!size_A==0) {
+  if(size_A != 0) {
   	std::istringstream iss(lines[1]);
-  	for (int i=0; i < size_arr; i++) iss >> arr[i];
+  	for (int i=0; i < size_A; i++) iss >> A[i];
   }
   int B;
   std::istringstream(lines[1]) >> B;
-      int result = solve(A, B);
+      std::int result = solve(A, B);
       std::cout << result << std::endl;
       return 0;
     }

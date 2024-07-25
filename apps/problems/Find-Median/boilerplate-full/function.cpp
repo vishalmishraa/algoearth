@@ -17,11 +17,11 @@
       int size_numbers;
   std::istringstream(lines[0]) >> size_numbers;
   std::vector<int> numbers(size_numbers);
-  if(!size_numbers==0) {
+  if(size_numbers != 0) {
   	std::istringstream iss(lines[1]);
-  	for (int i=0; i < size_arr; i++) iss >> arr[i];
+  	for (int i=0; i < size_numbers; i++) iss >> numbers[i];
   }
-      float result = findMedian(numbers);
+      std::float result = findMedian(numbers);
       std::cout << result << std::endl;
       return 0;
     }

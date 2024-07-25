@@ -16,7 +16,7 @@
       file.close();
       int limit;
   std::istringstream(lines[0]) >> limit;
-      list<int> result = findPrimes(limit);
+      std::list<int> result = findPrimes(limit);
       std::cout << result << std::endl;
       return 0;
     }

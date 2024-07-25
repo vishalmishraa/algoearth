@@ -16,7 +16,7 @@
       file.close();
       std::string text;
   std::istringstream(lines[0]) >> text;
-      bool result = isPalindrome(text);
+      std::bool result = isPalindrome(text);
       std::cout << result << std::endl;
       return 0;
     }
