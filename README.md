@@ -23,11 +23,35 @@ The Architecture represents a CI/CD pipeline and deployment enviroment that util
 7. Kubernetes : Kubernetes is used to deploy the services. It manages the containers and ensures that the services are running and available.
 
 
+## Deployment Configuration
 
+The project aims to deploy and scale the services like web app , judge0 workers , sweeper and boilerplate-generator on Kubernetes cluster. The deployment is automated using Github actions .
 
+### Key Objectives
 
+1. *CI/CD Pipeline*: Automate build, docker push ,  and deployment with Github Actions.
+2. *Kubernetes Deployment*: Use Kubernetes for scalable container orchestration.
+3. *Monitoring*: Setup New-Relic for monitoring the services on entire Kubernetes cluster.
 
+### Tools
 
+- *Digital Ocean*: Infrastructure management.
+- *Gihub Actions*: CI/CD automation.
+- *Kubernetes (K8s)*: Container orchestration.
+- *New Relic*: Metrics collection and visualization.
+
+### Deployment Architecture
+
+- *Web App*: Port 3000.
+- *Compiler*: Port 2358.
+- *Monitoring*: Using New Relic Monitoring service.
+- *Database*: Postgres Database. Port 5432.
+- *Cache*: Redis Cache. Port 6379.
+- *Extras*: Judge0 workers with Autoscaling , Problem Testcases mounted to Judge0 workers and Web App simultaneously.
+
+This setup ensures a robust, scalable, and efficient deployment of the algoearth services.
+
+The deployment process is automated using Docker , Kubernetes and Github Actions. Below are the detailed steps and configurations required for each part of the process.
 
 
 # Deploy Judge0 on Kubernetes (Recommended: DigitalOcean's K8s)
