@@ -16,7 +16,7 @@ spec:
       initContainers:
       - name: copy-problems
         image: vishal022/algoearth-problems:latest
-        command: ['sh', '-c', 'cp -r /usr/src/app/problems/* /problems']
+        command: ['sh', '-c', 'cp -r /usr/src/app/apps/problems/* /problems']
         volumeMounts:
         - name: problems
           mountPath: /problems 
