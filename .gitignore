@@ -42,3 +42,4 @@ yarn-error.log*
 *.pem
 
 /ops/judge-ops/kcj-kubeconfig.yaml
+apps/boilerplate-generator/tempCodeRunnerFile.js
