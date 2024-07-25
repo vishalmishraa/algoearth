@@ -1,3 +1,35 @@
+# Algoearth : Organize Competitive Programming Contests
+
+This project is based on monolithic architecture with microservices approach and  involves deploying these Four services:  Web app , compiler , sweeper , problem-boilerplate-generator .  
+
+## Architecture
+
+![Architecture](./architecture.png)
+
+The Architecture represents a CI/CD pipeline and deployment enviroment that utilize several tools and cloud services to manage build : 
+
+1. Web App , compiler  , sweeper and boilerplate-generator : These services are the core components of the application . each serving diffrent purpose like web service is used to host the web app and manages the user interaction , compiler service is used to compile the code and return the output , sweeper service is used to keep the data realtime like updating the status of the submission and boilerplate-generator is used to generate the boilerplate code for the problem statement.
+
+2. Turborepo/monorepo : The project is organized as a monorepo using the TurboRepo tool. This allows us to manage multiple services in a single repository and share code between them.
+
+3. Node.js : Node.js is used as the runtime environment for these services, enabling Tyepscript execution on the server side.
+
+4. GitHub: Source code is managed and versioned in GitHub. Developers commit and push their changes here.
+
+5. Github Actions : Github Actions is used to automate the CI/CD pipeline. It builds the code, then push it to docker and deploys the services to the Kubernetes cluster.
+
+6. Docker : Docker is used to containerize the services. Each service is built as a Docker image and pushed to the Docker Hub registry.
+
+7. Kubernetes : Kubernetes is used to deploy the services. It manages the containers and ensures that the services are running and available.
+
+
+
+
+
+
+
+
+
 # Deploy Judge0 on Kubernetes (Recommended: DigitalOcean's K8s)
 
 ## Requirements
