@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Copy Docker image to root
-        run: cp ./docker/web/Dockerfile .
+        run: cp ./docker/problems/Dockerfile .
 
       - name: Build Docker Image
         run: docker build --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} -t vishal022/algoearth-problems:latest .
