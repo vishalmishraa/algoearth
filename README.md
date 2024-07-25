@@ -53,8 +53,81 @@ This setup ensures a robust, scalable, and efficient deployment of the algoeart
 
 The deployment process is automated using Docker , Kubernetes and Github Actions. Below are the detailed steps and configurations required for each part of the process.
 
+## Local Development Setup (Recommended: Dokcer)
 
-# Deploy Judge0 on Kubernetes (Recommended: DigitalOcean's K8s)
+This application need postgres and redis as database and cache respectively. You can use docker to run these services locally. This deployment is largely local machine based with pipelines running on the local machine through Docker .
+
+
+
+### 1.  Clone the Repository into local system
+
+Here are the steps -
+Install git and clone the repository into the local system. As this is a node application, install node.js and npm 
+
+### Install Dependencies
+
+    command: npm install
+
+This will install all the dependencies to run the backend.
+
+### 2. Configure Environment Variables
+
+- Copy .env.example to a .env file in `aaps/web` , `aaps/boilerplate-generator` and `packages/db`
+
+    - app/web
+        ```sh
+        MOUNT_PATH=/apps/problems
+        NEXTAUTH_SECRET=secret
+        JWT_SECRET=secret
+        DATABASE_URL=postgresql://postgres:supersecurepassword@localhost:5432/algoearth?schema=public
+        REDIS_URL=redis://:supersecurepassword@localhost:6379
+        JUDGE0_URI=https://localhost:2358
+        ```
+    - app/boilerplate-generator
+        ```sh
+        PROBLEMS_DIR_PATH=/apps/problems
+        ```
+    - packages/db
+        ```sh
+        DATABASE_URL=postgresql://postgres:supersecurepassword@localhost:5432/algoearth?schema=public
+        MOUNT_PATH=../../apps/problems
+        ```
+We use port 3001 to communicate with the Mongo DB and collect data.
+
+### 3. Configure Postgres and Redis
+
+- Run the following commands to start the Postgres and Redis services:
+
+    ```sh
+    docker run --name postgres -e POSTGRES_PASSWORD=supersecurepassword -p 5432:5432 -d postgres
+    
+    ```
+
+    ```sh
+    docker run --name redis -e REDIS_PASSWORD=supersecurepassword -p 6379:6379 -d redis
+    ```
+### 4. System Configration to run Judge0 using Docker on Local machine
+-   As judge0 require `cgroup ` v1 to run , but by default in system cgroup v2 is enabled. So we need to change it to cgroup v1.
+    -  Run the following commands to change the cgroup version to v1:
+        ```sh
+        vim ~/Library/Group\ Containers/group.com.docker/settings.json
+        # append "deprecatedCgroupv1": true
+        ```
+
+### 5. Setup Judge0 on Local Machine using docker compose 
+ - Run the following commands to setup Judge0 on local machine:
+    ```sh
+        docker compose up
+        #docker compose file is present in the root directory of the project it will also start the judge0 workers , postgres and redis
+    ```
+### 6. Run the services
+ - Run the following commands to start the services:
+    ```sh
+        npm run dev
+        #this will start the web app and boilerplate-generator
+    ```
+
+## Deploy Judge0 on Kubernetes (Recommended: DigitalOcean's K8s)
 
 ## Requirements
 1. `kubectl`
