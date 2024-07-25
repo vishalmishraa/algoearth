@@ -22,6 +22,27 @@ The Architecture represents a CI/CD pipeline and deployment enviroment that util
 
 7. Kubernetes : Kubernetes is used to deploy the services. It manages the containers and ensures that the services are running and available.
 
+## Domain hosted with Cloudflare
+
+ - To copnfigure the domain with the kubernetes cluster , we can use cloudflare to manage the DNS and SSL certificates.
+
+    - Add the domain to cloudflare and get the cluster external IP address.
+
+        ```sh
+            kubectl get node -o wide
+        ```
+    - Add the cluster IP address to the cloudflare DNS settings with `A` name
+
+![Architecture](./cloudflare.png)
+
+## Monitoring using New Relic
+
+ - To monitor the services on the kubernetes cluster , we can use New Relic to monitor the services and get the metrics.
+
+    - Create an account on New Relic and get the license key.
+    - Follow the installation step by new-relic to install the new relic agent on the kubernetes cluster.
+
+![Architecture](./new-relic.png)
 
 ## Deployment Configuration
 
@@ -313,27 +334,6 @@ By following these steps, you will have `problems-pvc` pvc class that can be use
     ```sh
     kubectl apply -f ./k8s/LAST/ingress-judge-0.yml
     ```
-## Domain hosted with Cloudflare
-
- - To copnfigure the domain with the kubernetes cluster , we can use cloudflare to manage the DNS and SSL certificates.
-
-    - Add the domain to cloudflare and get the cluster external IP address.
-
-        ```sh
-            kubectl get node -o wide
-        ```
-    - Add the cluster IP address to the cloudflare DNS settings with `A` name
-
-![Architecture](./cloudflare.png)
-
-## Monitoring using New Relic
-
- - To monitor the services on the kubernetes cluster , we can use New Relic to monitor the services and get the metrics.
-
-    - Create an account on New Relic and get the license key.
-    - Follow the installation step by new-relic to install the new relic agent on the kubernetes cluster.
-
-![Architecture](./new-relic.png)
 
 ## Conclusion
 
