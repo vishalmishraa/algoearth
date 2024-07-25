@@ -313,3 +313,35 @@ By following these steps, you will have `problems-pvc` pvc class that can be use
     ```sh
     kubectl apply -f ./k8s/LAST/ingress-judge-0.yml
     ```
+## Domain hosted with Cloudflare
+
+ - To copnfigure the domain with the kubernetes cluster , we can use cloudflare to manage the DNS and SSL certificates.
+
+    - Add the domain to cloudflare and get the cluster external IP address.
+
+        ```sh
+            kubectl get node -o wide
+        ```
+    - Add the cluster IP address to the cloudflare DNS settings with `A` name
+
+![Architecture](./cloudflare.png)
+
+## Monitoring using New Relic
+
+ - To monitor the services on the kubernetes cluster , we can use New Relic to monitor the services and get the metrics.
+
+    - Create an account on New Relic and get the license key.
+    - Follow the installation step by new-relic to install the new relic agent on the kubernetes cluster.
+
+![Architecture](./new-relic.png)
+
+## Conclusion
+
+This project aims to deploy the services on the kubernetes cluster and monitor the services using New Relic. The deployment is automated using Github Actions and the services are deployed on the Digital Ocean Kubernetes cluster. The services are scalable and efficient, ensuring a robust deployment of the algoearth services.
+
+## Next Step
+
+- Add more services to the deployment.
+- Improve the CI/CD pipeline.
+- Optimize the deployment for better performance.
+
