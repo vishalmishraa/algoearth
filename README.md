@@ -113,7 +113,7 @@ This will install all the dependencies to run the backend.
         DATABASE_URL=postgresql://postgres:supersecurepassword@localhost:5432/algoearth?schema=public
         MOUNT_PATH=../../apps/problems
         ```
-We use port 3001 to communicate with the Mongo DB and collect data.
+We use port 3000 to run Web App
 
 ### 3. Configure Postgres and Redis
 
