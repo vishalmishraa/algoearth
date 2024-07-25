@@ -291,9 +291,10 @@ By following these steps, you will have `problems-pvc` pvc class that can be use
 
 ### 7. Horigentel POD Auto Scaler for judge0-worker
 
-    ```sh
-    kubectl apply -f ./k8s/HPA/HPA-judge0.yml
-    ```
+- To scale the judge0-worker pods based on the CPU usage , we can use Horizontal Pod Autoscaler (HPA) in kubernetes.
+
+        kubectl apply -f ./k8s/HPA/HPA-judge0.yml
+        
 
 ### 8. Apply nginx ingress controller
  - To use nginx ingress first we have to install it to the kube-system  using helm 
