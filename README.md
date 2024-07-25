@@ -127,20 +127,17 @@ We use port 3001 to communicate with the Mongo DB and collect data.
         #this will start the web app and boilerplate-generator
     ```
 
-## Deploy Judge0 on Kubernetes (Recommended: DigitalOcean's K8s)
+## Deployment using kubernetes (Recommended: Digital Ocean K8s)
 
-## Requirements
-1. `kubectl`
-2. `helm`
-3. Kubeconfig setup
+### -  Requirements 
+ - `kubectl` : Install kubectl to interact with the Kubernetes cluster.
+ - `helm` : Install helm to manage the Kubernetes applications.   
+ - Generate a DigitalOcean k8s cluster and get the kubeconfig file to interact with the cluster.
 
-## Steps to mount Problems TestCases to  Judge0
 
-### 1. Create a Kubernetes Cluster
+###  **Cluster configuration**
 
-Follow the instructions to create a Kubernetes cluster on DigitalOcean.
-
-### 2. Change cgroup Version to v1
+`Change cgroup Version to v1 in all nodes (can be done efficiently using Ansible)`
 
 Judge0 requires cgroup v1 to run. By default, the cluster uses cgroup v2. Follow these steps to change it:
 
@@ -174,9 +171,19 @@ Judge0 requires cgroup v1 to run. By default, the cluster uses cgroup v2. Follow
 
 3. Apply these changes on all nodes. (This can be efficiently done using Ansible.)
 
-### 3. Deploy add-problems to Kubernetes
+### 1.  Apply the Kubernetes configuration with ConfigMap
 
-Judge0 server and workers require `add-problems`. Follow these steps to deploy it:
+1. **Create a ConfigMap for the environment variables:**
+
+    ```sh
+    kubectl apply -f ./k8s/0-configmap/configmap.yml
+    ```
+
+    **Note:** Update to the configmap after Deployment of `Postgres and Redis` .
+
+### 2. Mount Problems to shared PVC
+
+####  **Web App , Judge0 server and workers require `add-problems`. Follow these steps to deploy it:**
 
 1. **Add NFS-based PVC for ReadWriteMany support:**
 
@@ -201,13 +208,13 @@ Judge0 server and workers require `add-problems`. Follow these steps to deploy i
 2. **Apply the storage class:**
 
     ```sh
-    kubectl apply -f ./ops/1-mount-problems/nfs-storageclass.yml
+    kubectl apply -f ./k8s/1-mount-problems/nfs-storageclass.yml
     ```
 
 3. **Apply PersistentVolume (PV) and PersistentVolumeClaim (PVC) for `problems`:**
 
     ```sh
-    kubectl apply -f ./ops/1-mount-problems/problems-pv-pvc.yml
+    kubectl apply -f ./k8s/1-mount-problems/problems-pv-pvc.yml
     ```
 
 4. **Deploy add-problems:**
@@ -215,7 +222,93 @@ Judge0 server and workers require `add-problems`. Follow these steps to deploy i
     This will add all the problems to the shared PVC:
 
     ```sh
-    kubectl apply -f ./ops/1-mount-problems/add-problem-deployment.yml
+    kubectl apply -f ./k8s/1-mount-problems/add-problem-deployment.yml
     ```
 
 By following these steps, you will have `problems-pvc` pvc class that can be used by judge0 to acess test cases on your Kubernetes cluster.
+
+### 3. Deploy Postgres and Redis
+
+####  **Deploy Postgres and Redis:**
+
+    kubectl apply -f ./k8s/2-postgres-redis/db.yml    
+
+
+### Note: Update the ConfigMap with the Postgres and Redis ClusterIPs.
+
+ - To get clusterIPs of Postgres and Redis
+
+    ```sh
+    kubectl get svc
+    ```
+
+### 4. Deploy Judge0
+
+####  **Deploy Judge0:**
+
+    kubectl apply -f ./k8s/3-judge0/judge0.yml
+
+### 5. Deploy  sweeper
+
+  - To Deploy Sweeper , first set Secret Key for the DATABASE_URL
+    
+    `NOTE: update the DATABASE_URL in the secret.yml file`
+    
+    ```sh
+    kubectl apply -f ./k8s/4-sweeper
+    ```
+  - Deploy the sweeper Deployment
+
+    ```sh
+    kubectl apply -f ./k8s/4-sweeper/deployment.yml
+    ```  
+
+### 6. Deploy Web App
+ - To Deploy Web App , first set Secret Key , configmap 
+    
+    `NOTE: update the secret.yml file`
+
+    - configmap.yml
+
+        ```sh
+        kubectl apply -f ./k8s/5-web/configmap.yml
+        ```
+    - secret.yml
+
+        ```sh
+        kubectl apply -f ./k8s/5-web/secret.yml
+        ```
+    - Deploy the Web App Deployment
+
+        ```sh
+        kubectl apply -f ./k8s/5-web/deployment.yml
+        ```
+    - Deploy the Web App Service
+
+        ```sh
+        kubectl apply -f ./k8s/5-web/services.yml
+        ```
+
+### 7. Horigentel POD Auto Scaler for judge0-worker
+
+    ```sh
+    kubectl apply -f ./k8s/HPA/HPA-judge0.yml
+    ```
+
+### 8. Apply nginx ingress controller
+ - To use nginx ingress first we have to install it to the kube-system  using helm 
+
+    ```sh
+    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+    ```
+    ```sh
+    helm repo update
+    ```
+    ```sh
+    helm install nginx-ingress ingress-nginx/ingress-nginx
+    ```
+ - Apply the ingress rules for the web app
+
+    ```sh
+    kubectl apply -f ./k8s/LAST/ingress-judge-0.yml
+    ```
