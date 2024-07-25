@@ -14,6 +14,19 @@ export const getProblems = async () => {
     return problems;
 };
 
+export const getAllProblems = async () => {
+    const problems = await db.problem.findMany({
+        where: {
+            hidden: false,
+        },
+        include: {
+            defaultCode: true,
+        },
+    });
+
+    return problems;
+}
+
 export const getProblem = async (ProblemId: string, contestId: string) => {
     if (contestId) {
         try {
