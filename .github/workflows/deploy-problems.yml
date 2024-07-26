@@ -48,3 +48,6 @@ jobs:
 
       - name: ReDeploy the Problems
         run: kubectl rollout restart deployment/add-problems
+
+      - name: Rebuild web
+        run: kubectl rollout restart deployment/algoearth
