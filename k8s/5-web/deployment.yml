@@ -18,9 +18,6 @@ spec:
         image: vishal022/algoearth-web:latest
         ports:
           - containerPort: 3000
-        volumeMounts:
-        - name: problems
-          mountPath: /dev/problems
         env:
           - name: DATABASE_URL
             valueFrom:
@@ -52,6 +49,9 @@ spec:
               configMapKeyRef:
                 name: algoearth-web-config
                 key: NEXTAUTH_URL
+        volumeMounts:
+          - name: problems
+            mountPath: /problems
       volumes:
       - name: problems
         persistentVolumeClaim:

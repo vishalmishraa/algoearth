@@ -7,14 +7,14 @@ on:
     paths:
       - 'apps/web/**'
       - 'docker/web/**'
-      - '.github/workflows/push-web.yml'
+      - '.github/workflows/deploy-web.yml'
   pull_request:
     branches:
       - 'main'
     paths:
       - 'apps/web/**'
       - 'docker/web/**'
-      - '.github/workflows/push-web.yml'
+      - '.github/workflows/deploy-web.yml'
     
 jobs:
   Deploy-web:
