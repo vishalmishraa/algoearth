@@ -6,7 +6,6 @@ on:
       - 'main'
     paths:
       - 'apps/web/**'
-      - 'apps/problems/**'
       - 'docker/web/**'
       - '.github/workflows/deploy-web.yml'
   pull_request:
@@ -14,7 +13,6 @@ on:
       - 'main'
     paths:
       - 'apps/web/**'
-      - 'apps/problems/**'
       - 'docker/web/**'
       - '.github/workflows/deploy-web.yml'
     
