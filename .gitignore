@@ -30,7 +30,7 @@ test
 docker-compose-private.yml
 /k8s/4-sweeper/secret-key.yml
 kcj-kubeconfig.yaml
-/private-k8s
+/k8s-private
 set-pro
 # Debug
 npm-debug.log*
