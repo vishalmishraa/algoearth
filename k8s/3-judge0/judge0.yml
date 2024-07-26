@@ -20,12 +20,6 @@ spec:
         image: judge0/judge0:1.13.1
         ports:
         - containerPort: 2358
-        volumeMounts:
-        - name: problems-volume
-          mountPath: /dev/problems
-        - name: config-volume
-          mountPath: /judge0.conf
-          subPath: judge0.conf
         env:
         - name: REDIS_PASSWORD
           value: "supersecurepassword"
@@ -48,8 +42,14 @@ spec:
           limits:
             cpu: "500m"
             memory: "500Mi"
+        volumeMounts:
+        - name: problems
+          mountPath: /problems
+        - name: config-volume
+          mountPath: /judge0.conf
+          subPath: judge0.conf
       volumes:
-      - name: problems-volume
+      - name: problems
         persistentVolumeClaim:
           claimName: problems-pvc 
       - name: config-volume
@@ -94,12 +94,6 @@ spec:
         - name: judge0-workers
           image: judge0/judge0:1.13.1
           command: ["./scripts/workers"]
-          volumeMounts:
-            - name: problems-volume
-              mountPath: /dev/problems
-            - name: config-volume
-              mountPath: /judge0.conf
-              subPath: judge0.conf
           env:
             - name: REDIS_PASSWORD
               value: "supersecurepassword"
@@ -122,8 +116,14 @@ spec:
             limits:
               cpu: "200m"
               memory: "500Mi"
+          volumeMounts:
+            - name: problems
+              mountPath: /problems
+            - name: config-volume
+              mountPath: /judge0.conf
+              subPath: judge0.conf
       volumes:
-        - name: problems-volume
+        - name: problems
           persistentVolumeClaim:
             claimName: problems-pvc 
         - name: config-volume

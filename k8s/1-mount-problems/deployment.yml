@@ -24,6 +24,9 @@ spec:
       - name: main-container
         image: busybox
         command: ['sh', '-c', 'sleep infinity']
+        volumeMounts:
+        - name: problems
+          mountPath: /problems
       volumes:
       - name: problems
         persistentVolumeClaim:

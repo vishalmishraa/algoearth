@@ -1,30 +1,26 @@
-#include <iostream>
-    #include <fstream>
-    #include <vector>
-    #include <string>
-    #include <sstream>
-    #include <climits>
-    
-    ##USER_CODE_HERE##
-    
-    int main() {
-      std::ifstream file("/dev/problems/Broken-SubArray/tests/inputs/##INPUT_FILE_INDEX##.txt");
-      std::vector<std::string> lines;
-      std::string line;
-      while (std::getline(file, line)) lines.push_back(line);
-    
-      file.close();
-      int size_A;
-  std::istringstream(lines[0]) >> size_A;
-  std::vector<int> A(size_A);
-  if(size_A != 0) {
-  	std::istringstream iss(lines[1]);
-  	for (int i=0; i < size_A; i++) iss >> A[i];
-  }
+
+            #include <stdio.h>
+            #include <stdlib.h>
+            #include <stdbool.h>
+            #include <string.h>
+            #include <limits.h>
+            
+            ##USER_CODE_HERE##
+            
+            int main() {
+                FILE *file = fopen("/dev/problems/Broken-SubArray/tests/inputs/##INPUT_FILE_INDEX##.txt", "r");
+                vector<string> lines;
+                string line;
+                while (fgets(line, sizeof(line), file)) lines.push_back(line);
+                fclose(file);
+                int size_A;
+  fscanf(file, "%d", &size_A);
+  int* A[size_A];
+  for (int i = 0; i < size_A; i++) fscanf(file, "%d", &A[i]);
   int B;
-  std::istringstream(lines[1]) >> B;
-      std::int result = solve(A, B);
-      std::cout << result << std::endl;
-      return 0;
-    }
-    
+  fscanf(file, "%d", &B);
+                int result = solve(A, B);
+                fprintf(stdout, "%d\n", result);
+                return 0;
+                }
+            

@@ -1,28 +1,24 @@
-#include <iostream>
-    #include <fstream>
-    #include <vector>
-    #include <string>
-    #include <sstream>
-    #include <climits>
-    
-    ##USER_CODE_HERE##
-    
-    int main() {
-      std::ifstream file("/dev/problems/Sort-Array/tests/inputs/##INPUT_FILE_INDEX##.txt");
-      std::vector<std::string> lines;
-      std::string line;
-      while (std::getline(file, line)) lines.push_back(line);
-    
-      file.close();
-      int size_values;
-  std::istringstream(lines[0]) >> size_values;
-  std::vector<int> values(size_values);
-  if(size_values != 0) {
-  	std::istringstream iss(lines[1]);
-  	for (int i=0; i < size_values; i++) iss >> values[i];
-  }
-      std::list<int> result = sortArray(values);
-      std::cout << result << std::endl;
-      return 0;
-    }
-    
+
+            #include <stdio.h>
+            #include <stdlib.h>
+            #include <stdbool.h>
+            #include <string.h>
+            #include <limits.h>
+            
+            ##USER_CODE_HERE##
+            
+            int main() {
+                FILE *file = fopen("/dev/problems/Sort-Array/tests/inputs/##INPUT_FILE_INDEX##.txt", "r");
+                vector<string> lines;
+                string line;
+                while (fgets(line, sizeof(line), file)) lines.push_back(line);
+                fclose(file);
+                int size_values;
+  fscanf(file, "%d", &size_values);
+  int* values[size_values];
+  for (int i = 0; i < size_values; i++) fscanf(file, "%d", &values[i]);
+                list<int> result = sortArray(values);
+                fprintf(stdout, "%d\n", result);
+                return 0;
+                }
+            
