@@ -44,7 +44,7 @@ spec:
             memory: "500Mi"
         volumeMounts:
         - name: problems
-          mountPath: /dev/problems
+          mountPath: /problems
         - name: config-volume
           mountPath: /judge0.conf
           subPath: judge0.conf
@@ -118,7 +118,7 @@ spec:
               memory: "500Mi"
           volumeMounts:
             - name: problems
-              mountPath: /dev/problems
+              mountPath: /problems
             - name: config-volume
               mountPath: /judge0.conf
               subPath: judge0.conf
