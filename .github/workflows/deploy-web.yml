@@ -9,7 +9,7 @@ on:
       - 'docker/web/**'
       - '.github/workflows/deploy-web.yml'
   pull_request:
-    branches:
+    branches: 
       - 'main' 
     paths:
       - 'apps/web/**'
