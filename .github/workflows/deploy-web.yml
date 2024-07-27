@@ -10,7 +10,7 @@ on:
       - '.github/workflows/deploy-web.yml'
   pull_request:
     branches:
-      - 'main'
+      - 'main' 
     paths:
       - 'apps/web/**'
       - 'docker/web/**'
