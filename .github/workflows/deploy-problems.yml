@@ -6,6 +6,7 @@ on:
       - 'main'
     paths:
       - 'apps/problems/**'
+      - 'apps/boilerplate-generator/**'
       - 'docker/problems/**'
       - '.github/workflows/deploy-problems.yml'
   pull_request:
