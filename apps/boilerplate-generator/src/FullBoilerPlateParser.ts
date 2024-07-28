@@ -223,25 +223,25 @@ export class FullBoilerPlateParser {
     }
 
     generateJs(): string {
-        const inputs = this.inputFields.map((field) => field.name).join(", ");
         const inputReads = this.inputFields
             .map((field) => {
                 if (field.type.startsWith("list<")) {
                     return `const size_${field.name} = parseInt(input.shift());\nconst ${field.name} = input.splice(0, size_${field.name}).map(Number);`;
-                } else {
+                } else if (field.type === "string") {
+                    return `const ${field.name} = input.shift();`;
+                }else{
                     return `const ${field.name} = parseInt(input.shift());`;
                 }
             })
             .join("\n  ");
-        const outputType = this.outputFields[0].type;
         const functionCall = `const result = ${this.functionName}(${this.inputFields.map((field) => field.name).join(", ")});`;
 
         return `##USER_CODE_HERE##
     
-    const input = require('fs').readFileSync('/dev/problems/${this.problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt', 'utf8').trim().split('\\n').join(' ').split(' ');
-    ${inputReads}
-    ${functionCall}
-    console.log(result);
+            const input = require('fs').readFileSync('/dev/problems/${this.problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt', 'utf8').trim().split('\\n').join(' ').split(' ');
+            ${inputReads}
+            ${functionCall}
+            console.log(result);
         `;
     }
 
