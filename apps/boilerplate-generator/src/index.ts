@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { ProblemTemplateParser } from './problemTemplateParser';
-import { FullBoilerPlateParser } from './FullBoilerPlateParser';
+import { FullBoilerPlateParser } from './FullBoilerPlateGenerator/FullBoilerPlateParser';
 dotenv.config();
 
 // extract all the folders from problems directory and return them as an array in promise
@@ -12,11 +12,8 @@ const getFolders = (dirPath: string) => {
             if (err) {
                 return reject(err);
             }
-
             const folers: string[] = [];
-
             let pending = files.length;
-
             files.forEach((file) => {
                 const filePath = path.join(dirPath, file);
                 fs.stat(filePath, (err, stat) => {
