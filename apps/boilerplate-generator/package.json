@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
-    "boiler:generate": "npm run build && node dist/index.js",
+    "build": "yarn esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
+    "boiler:generate": "yarn run build && node dist/index.js",
     "test": "npx vitest run",
     "start": "npm run test && npm run boiler:generate"
   },
@@ -15,10 +15,10 @@
   "dependencies": {
     "@types/node": "^20.12.12",
     "dotenv": "^16.4.5",
-    "esbuild": "^0.21.5",
     "fs": "^0.0.1-security"
   },
   "devDependencies": {
+    "esbuild": "^0.23.0",
     "vitest": "^2.0.4"
   }
 }
