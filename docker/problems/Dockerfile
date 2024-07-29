@@ -13,7 +13,7 @@ WORKDIR /usr/src/app
 
 RUN npm install
 
-RUN  cd ./apps/boilerplate-generator && npm run build && PROBLEMS_DIR_PATH=/usr/src/app/apps/problems node dist/index.js
+RUN  cd ./apps/boilerplate-generator && PROBLEMS_DIR_PATH=/usr/src/app/apps/problems npm run start
 
 WORKDIR /usr/src/app
 
