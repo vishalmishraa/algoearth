@@ -146,7 +146,19 @@ function SubmitProblem({
                 activeContestId: contestId,
                 token: token,
             });
-            console.log("response from proState : ",response.data);
+
+            if(response.status === 429){
+                setStatus(SubmitStatus.FAILED);
+                toast.error("Try again after sometime");
+                return;
+            };
+
+            if(response.status != 200){
+                setStatus(SubmitStatus.FAILED);
+                toast.error("Failed to submit");
+                return;
+            };
+
             pollWithBackoff(response.data.id, 30);
         } catch (e) {
             //@ts-ignore
