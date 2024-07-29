@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "yarn esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
-    "boiler:generate": "yarn run build && node dist/index.js",
+    "build": "npm esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
+    "boiler:generate": "npm run build && node dist/index.js",
     "test": "npx vitest run",
     "start": "npm run test && npm run boiler:generate"
   },

@@ -5,7 +5,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "dev:docker": "npm run prisma:docker && yarn dev",
+    "dev:docker": "npm run prisma:docker && npm dev",
     "prisma:docker": "cd packages/db && npm prisma db push --force-reset && npm prisma db seed",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "start:web": "cd apps/web && npm run start",

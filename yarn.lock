@@ -1091,7 +1091,6 @@ binary-extensions@^2.0.0:
     dotenv "^16.4.5"
     esbuild "^0.21.5"
     fs "^0.0.1-security"
-    vitest "^2.0.4"
 
 brace-expansion@^1.1.7:
   version "1.1.11"

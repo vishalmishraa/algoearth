@@ -1,0 +1,30 @@
+name: Test Problem directory structure
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'apps/problems/**'
+      - 'apps/boilerplate-generator/**'
+      - 'docker/problems/**'
+      - '.github/workflows/deploy-problems.yml'
+  pull_request:
+        branches:
+          - 'main'
+        paths:
+          - 'apps/problems/**'
+          - 'docker/problems/**'
+          - '.github/workflows/deploy-problems.yml'
+    
+      
+jobs:
+  Deploy-sweeper:
+    name: Test Problem directory structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v3
+
+      - name: Test problems directory
+        run: cd apps/boilerplate-generator && npm install && npm run test

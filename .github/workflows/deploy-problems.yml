@@ -9,14 +9,7 @@ on:
       - 'apps/boilerplate-generator/**'
       - 'docker/problems/**'
       - '.github/workflows/deploy-problems.yml'
-  pull_request:
-    branches:
-      - 'main'
-    paths:
-      - 'apps/problems/**'
-      - 'docker/problems/**'
-      - '.github/workflows/deploy-problems.yml'
-
+      
 jobs:
   Deploy-sweeper:
     name: Builds and pushes to Docker Hub
@@ -24,9 +17,6 @@ jobs:
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@v3
-
-      - name: Run test for Problems
-        run: npm install &&  cd apps/boilerplate-generator && npm run test
 
       - name: Copy Docker image to root
         run: cp ./docker/problems/Dockerfile .
