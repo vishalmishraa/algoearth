@@ -45,5 +45,4 @@ yarn-error.log*
 /ops/judge-ops/kcj-kubeconfig.yaml
 apps/boilerplate-generator/tempCodeRunnerFile.js
 algoearth-gcp.yml
-apps/problems/*/boilerplate/*
-apps/problems/*/boilerplate-full/*
+

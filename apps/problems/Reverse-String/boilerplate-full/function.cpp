@@ -1,23 +1,22 @@
-#include <iostream>
-    #include <fstream>
-    #include <vector>
-    #include <string>
-    #include <sstream>
-    #include <climits>
-    
-    ##USER_CODE_HERE##
-    
-    int main() {
-      std::ifstream file("/dev/problems/Reverse-String/tests/inputs/##INPUT_FILE_INDEX##.txt");
-      std::vector<std::string> lines;
-      std::string line;
-      while (std::getline(file, line)) lines.push_back(line);
-    
-      file.close();
-      std::string originalString;
-  std::istringstream(lines[0]) >> originalString;
-      std::string result = reverseString(originalString);
-      std::cout << result << std::endl;
-      return 0;
-    }
-    
+
+            #include <stdio.h>
+            #include <stdlib.h>
+            #include <stdbool.h>
+            #include <string.h>
+            #include <limits.h>
+            
+            ##USER_CODE_HERE##
+            
+            int main() {
+                FILE *file = fopen("/dev/problems/Reverse-String/tests/inputs/##INPUT_FILE_INDEX##.txt", "r");
+                vector<string> lines;
+                string line;
+                while (fgets(line, sizeof(line), file)) lines.push_back(line);
+                fclose(file);
+                char* originalString;
+  fscanf(file, "%d", &originalString);
+                string result = reverseString(originalString);
+                fprintf(stdout, "%d\n", result);
+                return 0;
+                }
+            

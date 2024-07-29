@@ -1,39 +1,39 @@
 
-    import java.io.*;
-    import java.util.*;
-    
-    public class Main {
-        
-        ##USER_CODE_HERE##
-    
-        public static void main(String[] args) {
-            String filePath = "/dev/problems/Find-Median/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
-            List<String> lines = readLinesFromFile(filePath);
-            int size_numbers = Integer.parseInt(lines.get(0).trim());
+            import java.io.*;
+            import java.util.*;
 
-            List<Integer> numbers = new ArrayList<>(size_numbers);
+            public class Main {
+                
+                ##USER_CODE_HERE##
 
-            String[] inputStream = lines.get(1).trim().split("\s+");
+                public static void main(String[] args) {
+                    String filePath = "/dev/problems/Find-Median/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
+                    List<String> lines = readLinesFromFile(filePath);
+                    int size_numbers = Integer.parseInt(lines.get(0).trim());
 
-            for (String inputChar : inputStream)  {
+        List<Integer> numbers = new ArrayList<>(size_numbers);
 
-              numbers.add(Integer.parseInt(inputChar));
+        String[] inputStream = lines.get(1).trim().split("\s+");
 
-            }
+        for (String inputChar : inputStream)  {
 
-            float result = findMedian(numbers);
-            System.out.println(result);
+          numbers.add(Integer.parseInt(inputChar));
+
         }
-        public static List<String> readLinesFromFile(String filePath) {
-            List<String> lines = new ArrayList<>();
-            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    lines.add(line);
+
+                    float result = findMedian(numbers);
+                    System.out.println(result);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                public static List<String> readLinesFromFile(String filePath) {
+                    List<String> lines = new ArrayList<>();
+                    try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            lines.add(line);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return lines;
+                }
             }
-            return lines;
-        }
-    }

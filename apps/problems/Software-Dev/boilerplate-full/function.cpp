@@ -1,27 +1,26 @@
-#include <iostream>
-    #include <fstream>
-    #include <vector>
-    #include <string>
-    #include <sstream>
-    #include <climits>
-    
-    ##USER_CODE_HERE##
-    
-    int main() {
-      std::ifstream file("/dev/problems/Software-Dev/tests/inputs/##INPUT_FILE_INDEX##.txt");
-      std::vector<std::string> lines;
-      std::string line;
-      while (std::getline(file, line)) lines.push_back(line);
-    
-      file.close();
-      int F;
-  std::istringstream(lines[0]) >> F;
+
+            #include <stdio.h>
+            #include <stdlib.h>
+            #include <stdbool.h>
+            #include <string.h>
+            #include <limits.h>
+            
+            ##USER_CODE_HERE##
+            
+            int main() {
+                FILE *file = fopen("/dev/problems/Software-Dev/tests/inputs/##INPUT_FILE_INDEX##.txt", "r");
+                vector<string> lines;
+                string line;
+                while (fgets(line, sizeof(line), file)) lines.push_back(line);
+                fclose(file);
+                int F;
+  fscanf(file, "%d", &F);
   int B;
-  std::istringstream(lines[1]) >> B;
+  fscanf(file, "%d", &B);
   int D;
-  std::istringstream(lines[2]) >> D;
-      std::int result = solve(F, B, D);
-      std::cout << result << std::endl;
-      return 0;
-    }
-    
+  fscanf(file, "%d", &D);
+                int result = solve(F, B, D);
+                fprintf(stdout, "%d\n", result);
+                return 0;
+                }
+            

@@ -1,8 +1,13 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-import { ProblemTemplateParser } from './problemTemplateParser';
-import { FullBoilerPlateParser } from './FullBoilerPlateGenerator/FullBoilerPlateParser';
+import ProblemParser from './Parser/ProblemParser';
+import generateFullC from './GenerateFullBoilerplate/generateFullC';
+import generateFullJava from './GenerateFullBoilerplate/generateFullJava';
+import generateFullRust from './GenerateFullBoilerplate/generateFullRust';
+import generateFullPython from './GenerateFullBoilerplate/generateFullPython';
+import generateFullJs from './GenerateFullBoilerplate/generateFullJs';
+import GeneratePartial from './GeneratePartialBoilerplate/GeneratePartial';
 dotenv.config();
 
 // extract all the folders from problems directory and return them as an array in promise
@@ -36,21 +41,23 @@ const getFolders = (dirPath: string) => {
 
 function generatePartialBoilerplate(dirPath: string, folder: string) {
     const template = path.join(dirPath, folder, 'template.md');
-    const boilerPlatePath = path.join(dirPath , folder, 'boilerplate');
+    const boilerPlatePath = path.join(dirPath, folder, 'boilerplate');
 
     //read the template file
     const templateContent = fs.readFileSync(template, 'utf-8');
 
     //parse the template file and extract the boilerplate
-    const parser = new ProblemTemplateParser();
-    parser.parse(templateContent);
+    const parser = new ProblemParser();
+    const data = parser.parse(templateContent);
 
     //generate the boilerplate
-    const cppCode = parser.generateCpp();
-    const javaCode = parser.generateJava();
-    const rustCode = parser.generateRust();
-    const pythonCode = parser.generatePython();
-    const javascriptCode = parser.generateJavascript();
+    const generatePartial = new GeneratePartial(data);
+
+    const cppCode = generatePartial.generateCpp();
+    const javaCode = generatePartial.generateJava();
+    const rustCode = generatePartial.generateRust();
+    const pythonCode = generatePartial.generatePython();
+    const javascriptCode = generatePartial.generateJavascript();
 
     //check if boilerplate directory exists
     if (!fs.existsSync(boilerPlatePath)) {
@@ -68,23 +75,23 @@ function generatePartialBoilerplate(dirPath: string, folder: string) {
     console.log(`Boilerplate generated for ${folder}`);
 };
 
-function generateFullBoilerPlate(dirPath: string, folder: string){
+function generateFullBoilerPlate(dirPath: string, folder: string) {
     const template = path.join(dirPath, folder, 'template.md');
-    const boilerPlatePath = path.join(dirPath , folder, 'boilerplate-full');
+    const boilerPlatePath = path.join(dirPath, folder, 'boilerplate-full');
 
     //read the template file
     const templateContent = fs.readFileSync(template, 'utf-8');
 
     //parse the template file and extract the boilerplate
-    const parser = new FullBoilerPlateParser();
-    parser.parse(templateContent);
+    const parser = new ProblemParser()
+    const data = parser.parse(templateContent);
 
     //generate the boilerplate
-    const cppCode = parser.generateCpp();
-    const javaCode = parser.generateJava();
-    const rustCode = parser.generateRust();
-    const pythonCode = parser.generatePython();
-    const javascriptCode = parser.generateJs();
+    const cppCode = generateFullC(data)
+    const javaCode = generateFullJava(data)
+    const rustCode = generateFullRust(data);
+    const pythonCode = generateFullPython(data)
+    const javascriptCode = generateFullJs(data)
 
     //check if boilerplate directory exists
     if (!fs.existsSync(boilerPlatePath)) {
