@@ -6,6 +6,7 @@ import { LANGUAGE_MAPPING } from "@repo/common/language";
 import db from "@/app/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
+import { isRequestAllowed } from "@/app/lib/redis";
 
 
 const JUDGE0_URI = process.env.JUDGE0_URI;
@@ -21,7 +22,18 @@ export async function POST(req: NextRequest) {
                 status: 401
             }
         );
-    }
+    };
+
+    //Check if user is allowed to submit
+    const allowed = await isRequestAllowed(session.user.id, 60);// 1 minute window for 2 requests
+    if (!allowed) {
+        return NextResponse.json(
+            {
+                message: "Rate limit exceeded",
+                status: 429
+            }
+        );
+    };
 
 
     //get and check the submission input
