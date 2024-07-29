@@ -25,6 +25,9 @@ jobs:
       - name: Checkout the Repository
         uses: actions/checkout@v3
 
+      - name: Run test for Problems
+        run: cd apps/problems && npm install && npm run test
+
       - name: Copy Docker image to root
         run: cp ./docker/problems/Dockerfile .
 
