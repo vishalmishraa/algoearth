@@ -6,16 +6,15 @@ on:
       - 'main'
     paths:
       - 'apps/problems/**'
-      - 'apps/boilerplate-generator/**'
       - 'docker/problems/**'
-      - '.github/workflows/deploy-problems.yml'
+      - '.github/workflows/test-problems.yml'
   pull_request:
         branches:
           - 'main'
         paths:
           - 'apps/problems/**'
           - 'docker/problems/**'
-          - '.github/workflows/deploy-problems.yml'
+          - '.github/workflows/test-problems.yml'
     
       
 jobs:
