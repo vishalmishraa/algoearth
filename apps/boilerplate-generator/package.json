@@ -6,8 +6,9 @@
   "scripts": {
     "build": "yarn esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
     "boiler:generate": "yarn run build && node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }, 
+    "test": "npx vitest run",
+    "start": "npm run test && npm run boiler:generate"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,5 +17,8 @@
     "dotenv": "^16.4.5",
     "esbuild": "^0.21.5",
     "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.4"
   }
 }
