@@ -26,7 +26,7 @@ coverage
 out/
 build
 dist
-test
+testf
 docker-compose-private.yml
 /k8s/4-sweeper/secret-key.yml
 kcj-kubeconfig.yaml
