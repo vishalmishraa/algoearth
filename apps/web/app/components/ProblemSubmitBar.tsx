@@ -18,9 +18,10 @@ import { CheckIcon, CircleX, ClockIcon } from "lucide-react";
 import { toast } from "react-toastify";
 import { signIn, useSession } from "next-auth/react";
 import { submissions as SubmissionsType } from "@prisma/client";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile } from '@marsidev/react-turnstile';
 
-const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "0x4AAAAAAAc4qhUEsytXspC_";
+
+const CLOUD_FLARE_TURNSTILE_SITE_KEY: string = process.env.NEXT_PUBLIC_CLOUD_FLARE_TURNSTILE_SITE_KEY || "0x4AAAAAAAgNypsUam0USvCa";
 
 enum SubmitStatus {
     SUBMIT = "SUBMIT",
@@ -147,13 +148,19 @@ function SubmitProblem({
                 token: token,
             });
 
-            if(response.status === 429){
+            if (response.status === 429) {
                 setStatus(SubmitStatus.FAILED);
                 toast.error("Try again after sometime");
                 return;
             };
 
-            if(response.status != 200){
+            if (response.status === 400) {
+                setStatus(SubmitStatus.FAILED);
+                toast.error("Try again ! something went wrong");
+                return;
+            }
+
+            if (response.status != 200) {
                 setStatus(SubmitStatus.FAILED);
                 toast.error("Failed to submit");
                 return;
@@ -204,6 +211,13 @@ function SubmitProblem({
                 />
             </div>
             <div className="flex justify-end">
+                {
+                    process.env.NODE_ENV === "production" && (
+                        <Turnstile onSuccess={(token: any) => {
+                            setToken(token)
+                        }} siteKey={CLOUD_FLARE_TURNSTILE_SITE_KEY} />
+                    )
+                }
                 <Button
                     disabled={status === SubmitStatus.PENDING}
                     type="submit"
