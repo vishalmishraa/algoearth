@@ -18,6 +18,9 @@ spec:
         image: vishal022/algoearth-web:latest
         ports:
           - containerPort: 3000
+        volumeMounts:
+        - name: problems
+          mountPath: /dev/problems
         env:
           - name: DATABASE_URL
             valueFrom:
@@ -39,19 +42,31 @@ spec:
               secretKeyRef:
                 name: algoearth-web-secret
                 key: JUDGE0_URI
+          - name: CLOUDFLARE_TURNSTILE_SITE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: algoearth-web-secret
+                key: CLOUDFLARE_TURNSTILE_SITE_KEY
+          - name: CLOUDFLARE_TURNSTILE_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: algoearth-web-secret
+                key:  CLOUDFLARE_TURNSTILE_SECRET_KEY
           - name: MOUNT_PATH
             valueFrom:
               configMapKeyRef:
                 name: algoearth-web-config
                 key: MOUNT_PATH
+          - name: NODE_ENV
+            valueFrom:
+              configMapKeyRef:
+                name: algoearth-web-config
+                key: NODE_ENV
           - name: NEXTAUTH_URL
             valueFrom:
               configMapKeyRef:
                 name: algoearth-web-config
                 key: NEXTAUTH_URL
-        volumeMounts:
-          - name: problems
-            mountPath: /problems
       volumes:
       - name: problems
         persistentVolumeClaim:

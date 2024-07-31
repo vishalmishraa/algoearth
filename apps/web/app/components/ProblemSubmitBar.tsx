@@ -20,7 +20,7 @@ import { signIn, useSession } from "next-auth/react";
 import { submissions as SubmissionsType } from "@prisma/client";
 import { Turnstile } from "@marsidev/react-turnstile";
 
-const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "0x4AAAAAAAc4qhUEsytXspC_";
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "0x4AAAAAAAgE_1Uk6Lva-ewz";
 
 enum SubmitStatus {
     SUBMIT = "SUBMIT",
@@ -106,6 +106,7 @@ function SubmitProblem({
         setCode(defaultCode);
     }, [problem]);
 
+
     async function pollWithBackoff(id: string, retries: number) {
 
         if (retries === 0) {
@@ -144,16 +145,16 @@ function SubmitProblem({
                 languageId: language,
                 problemId: problem.id,
                 activeContestId: contestId,
-                token: token,
+                token: token
             });
 
-            if(response.status === 429){
+            if (response.status === 429) {
                 setStatus(SubmitStatus.FAILED);
                 toast.error("Try again after sometime");
                 return;
             };
 
-            if(response.status != 200){
+            if (response.status != 200) {
                 setStatus(SubmitStatus.FAILED);
                 toast.error("Failed to submit");
                 return;
@@ -204,6 +205,12 @@ function SubmitProblem({
                 />
             </div>
             <div className="flex justify-end">
+                {process.env.NODE_ENV === "production" && (
+                    <Turnstile
+                        onSuccess={(token) => setToken(token)}
+                        siteKey={TURNSTILE_SITE_KEY}
+                    />
+                )};
                 <Button
                     disabled={status === SubmitStatus.PENDING}
                     type="submit"

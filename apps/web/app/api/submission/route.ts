@@ -10,6 +10,8 @@ import { isRequestAllowed } from "@/app/lib/redis";
 
 
 const JUDGE0_URI = process.env.JUDGE0_URI;
+const CLOUDFLARE_TURNSTILE_SECRET_KEY = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY!;
+const CLOUDFLARE_TURNSTILE_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 
 export async function POST(req: NextRequest) {
@@ -36,6 +38,7 @@ export async function POST(req: NextRequest) {
     };
 
 
+
     //get and check the submission input
     const submissionInput = SubmissionInput.safeParse(await req.json());
     if (!submissionInput.success) {
@@ -46,6 +49,30 @@ export async function POST(req: NextRequest) {
             }
         );
     };
+
+    if (process.env.NODE_ENV === "production") {
+        let formData = new FormData();
+        formData.append("secret", CLOUDFLARE_TURNSTILE_SECRET_KEY!);
+        formData.append("response", submissionInput.data.token);
+
+        const result = await fetch(CLOUDFLARE_TURNSTILE_URL, {
+            body: formData,
+            method: 'POST',
+        });
+
+        const outcome = await result.json();
+
+        if (!outcome.success && process.env.NODE_ENV == "production") {
+            return NextResponse.json(
+                {
+                    message: "Please try again! something went wrong",
+                    status: 403,
+                }
+            );
+        }
+    }
+
+
 
     //get the problem
     const dbProblem = await db.problem.findUnique({
@@ -89,7 +116,7 @@ export async function POST(req: NextRequest) {
             })),
         }
     );
-    
+
 
     //create the submission in the database
     const submission = await db.submission.create({
@@ -153,7 +180,7 @@ export async function GET(req: NextRequest) {
         },
     });
 
-    if(submission?.status === "AC"){
+    if (submission?.status === "AC") {
         const updatedProblem = await db.problem.update({
             where: {
                 id: submission.problemId,
@@ -174,7 +201,7 @@ export async function GET(req: NextRequest) {
             );
         }
     }
-    
+
     if (!submission) {
         return NextResponse.json(
             {
