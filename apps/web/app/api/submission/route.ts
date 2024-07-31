@@ -10,6 +10,8 @@ import { isRequestAllowed } from "@/app/lib/redis";
 
 
 const JUDGE0_URI = process.env.JUDGE0_URI;
+const CLOUD_FLARE_TURNSTILE_SECRET_KEY = process.env.CLOUD_FLARE_TURNSTILE_SECRET_KEY as string;
+const CLOUD_FLARE_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 
 export async function POST(req: NextRequest) {
@@ -46,6 +48,22 @@ export async function POST(req: NextRequest) {
             }
         );
     };
+
+    if (process.env.NODE_ENV === "production") {
+        let formData = new FormData();
+        formData.append('secret', CLOUD_FLARE_TURNSTILE_SECRET_KEY);
+        formData.append('response', submissionInput.data.token);
+
+        const turnstileResponse = await axios.post(CLOUD_FLARE_URL, formData);
+        if (!turnstileResponse.data.success) {
+            return NextResponse.json(
+                {
+                    message: "Invalid token",
+                    status: 400
+                }
+            );
+        };
+    }
 
     //get the problem
     const dbProblem = await db.problem.findUnique({
@@ -89,7 +107,7 @@ export async function POST(req: NextRequest) {
             })),
         }
     );
-    
+
 
     //create the submission in the database
     const submission = await db.submission.create({
@@ -153,7 +171,7 @@ export async function GET(req: NextRequest) {
         },
     });
 
-    if(submission?.status === "AC"){
+    if (submission?.status === "AC") {
         const updatedProblem = await db.problem.update({
             where: {
                 id: submission.problemId,
@@ -174,7 +192,7 @@ export async function GET(req: NextRequest) {
             );
         }
     }
-    
+
     if (!submission) {
         return NextResponse.json(
             {
