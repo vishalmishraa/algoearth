@@ -8,14 +8,7 @@ on:
       - 'apps/web/**'
       - 'docker/web/**'
       - '.github/workflows/deploy-web.yml' 
-  pull_request:
-    branches: 
-      - 'main' 
-    paths:
-      - 'apps/web/**'
-      - 'docker/web/**'
-      - '.github/workflows/deploy-web.yml'
-    
+  
 jobs:
   Deploy-web:
     name: Builds and pushes to Docker Hub
