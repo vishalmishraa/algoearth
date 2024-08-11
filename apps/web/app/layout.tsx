@@ -4,8 +4,8 @@
 import { Chivo } from "next/font/google";
 import { Rubik } from "next/font/google";
 import "./globals.css";
-import { Appbar } from "./components/Appbar";
-import { cn } from "@/app/lib/utils";
+import { Appbar } from "../components/Appbar";
+import { cn } from "@/lib/utils";
 // import { Footer } from "../components/Footer";
 import { Providers, ThemeProvider } from "../providers";
 

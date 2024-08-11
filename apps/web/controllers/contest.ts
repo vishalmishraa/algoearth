@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import db from "@/app/db";
+import db from "@/db";
 import { authOptions } from "../lib/auth";
 
 

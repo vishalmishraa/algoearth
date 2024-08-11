@@ -1,4 +1,4 @@
-import { getContest } from "@/app/controllers/contest";
+import { getContest } from "@/controllers/contest";
 import { ContestClock } from "./ContestClock";
 import { ContestPoints } from "./ContestPoints";
 import { ContestProblemsTable } from "./ContestProblemsTable";

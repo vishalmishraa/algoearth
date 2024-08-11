@@ -1,4 +1,4 @@
-import db from "@/app/db";
+import db from "@/db";
 
 export const getProblems = async () => {
     const problems = await db.problem.findMany({
