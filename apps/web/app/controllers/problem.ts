@@ -51,8 +51,9 @@ export const getProblem = async (ProblemId: string, contestId: string) => {
                 },
                 include: {
                     defaultCode: true,
+                    tags: true,
                 },
-            }); 
+            });
 
             return problem;
         } catch (error) {
@@ -68,6 +69,7 @@ export const getProblem = async (ProblemId: string, contestId: string) => {
         },
         include: {
             defaultCode: true,
+            tags: true,
         },
     });
     return problem;

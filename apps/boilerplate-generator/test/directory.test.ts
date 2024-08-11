@@ -164,7 +164,16 @@ describe('Problem folder exist', () => {
                 expect(tag).not.toBe('');
             });
         });
-    });
+
+        //there should not be more then 7 tags
+        it(`${file} should not have more then 7 tags`, () => {
+            const problemFolderPath = path.join(problemsPath, file);
+            const tagsPath = path.join(problemFolderPath, 'tags.md');
+            const tagsContent = fs.readFileSync(tagsPath, 'utf8');
+            const fetchedTags = tagsContent.split('\n').map(tag => tag.trim());
+            expect(fetchedTags.length).toBeLessThanOrEqual(7);
+        })
+    }); 
 
 });
 
