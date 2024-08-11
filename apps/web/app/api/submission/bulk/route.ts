@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/app/db";
+import db from "@/db";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { authOptions } from "../../../../lib/auth";
 
 export async function GET(req: NextRequest) {
     //Check if user is logged in

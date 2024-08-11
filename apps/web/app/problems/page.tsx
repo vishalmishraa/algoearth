@@ -1,4 +1,4 @@
-import { Problems } from '@/app/components/Problems';
+import { Problems } from '@/components/Problems';
 
 const ProblemsPage = () => {
   return (

@@ -1,4 +1,4 @@
-import { Contests } from '@/app/components/Contests';
+import { Contests } from '@/components/Contests';
 
 const ContestsPage = () => {
   return (

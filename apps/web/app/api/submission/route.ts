@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SubmissionInput } from "@repo/common/zod";
-import { getProblem } from "../../lib/problems";
+import { getProblem } from "../../../lib/problems";
 import axios from "axios";
 import { LANGUAGE_MAPPING } from "@repo/common/language";
-import db from "@/app/db";
+import db from "@/db";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../lib/auth";
-import { isRequestAllowed } from "@/app/lib/redis";
+import { authOptions } from "../../../lib/auth";
+import { isRequestAllowed } from "@/lib/redis";
 
 
 const JUDGE0_URI = process.env.JUDGE0_URI;

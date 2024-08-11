@@ -1,5 +1,4 @@
-import { useParams } from "next/navigation";
-import { Contest } from "@/app/components/Contest";
+import { Contest } from "@/components/Contest";
 export default function ContestPage({ params }: { params: { id: string } }) {
   if (!params.id) {
     return <div>Contest doesnt exist...</div>;
