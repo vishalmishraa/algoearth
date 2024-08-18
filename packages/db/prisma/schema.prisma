@@ -19,6 +19,7 @@ model User {
   role               UserRole            @default(USER)
   submissions        Submission[]
   contestPoints      ContestPoints[]
+  contests           Contest[]
 }
 
 model Contest {
@@ -34,6 +35,8 @@ model Contest {
   problems           ContestProblem[]
   contestSubmissions ContestSubmission[]
   leaderboard        Boolean             @default(false)
+  authorId           String
+  author             User               @relation(fields: [authorId], references: [id])
 }
 
 model ContestProblem {

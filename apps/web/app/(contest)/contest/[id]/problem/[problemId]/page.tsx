@@ -1,5 +1,5 @@
 import { ProblemStatement } from "@/components/ProblemStatement";
-import { getProblem } from "../../../../../controllers/problem";
+import { getProblem } from "../../../../../../controllers/problem";
 import { ProblemSubmitBar } from "@/components/ProblemSubmitBar";
 
 export default async function ProblemPage({
