@@ -21,7 +21,7 @@ jobs:
         run: cp ./docker/web/Dockerfile . 
 
       - name: Build Docker Image
-        run: docker build --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} REDIS_URL=${{secrets.REDIS_URL}} -t vishal022/algoearth-web:latest .
+        run: docker build --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} --build-arg REDIS_URL=${{ secrets.REDIS_URL }} -t vishal022/algoearth-web:latest .
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
