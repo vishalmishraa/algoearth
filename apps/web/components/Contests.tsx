@@ -10,18 +10,21 @@ export function Contests() {
   const [upcomingContests, setUpcomingContests] = useState<Icontest[]>([]);
   const [pastContests, setPastContests] = useState<Icontest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const upConsRes = await axios.get('/api/contest/upcoming');
-        if (upConsRes.status !== 200) {
-          throw new Error(upConsRes.data.message);
+        const [upcomingRes, pastRes] = await Promise.all([
+          axios.get('/api/contest/upcoming'),
+          axios.get('/api/contest/past')
+        ]);
+
+        if (upcomingRes.status !== 200 || pastRes.status !== 200) {
+          throw new Error("Failed to fetch contests");
         }
-        setUpcomingContests(upConsRes.data);
+
+        setUpcomingContests(upcomingRes.data);
+        setPastContests(pastRes.data)
       } catch (error: any) {
         console.error(error);
         toast.error(error.message || "An error occurred while fetching contests.");
@@ -33,27 +36,30 @@ export function Contests() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const pastConsRes = await axios.get('/api/contest/past');
-        if (pastConsRes.status !== 200) {
-          throw new Error(pastConsRes.data.message);
-        }
-        setPastContests(pastConsRes.data);
-      } catch (error: any) {
-        console.error(error);
-        toast.error(error.message || "An error occurred while fetching contests.");
-      } finally {
-        setIsLoading(false);
+  if (isLoading) {
+    return <div>Loading contests...</div>;
+  }
+
+  return (
+    <div>
+
+      {
+
+        isLoading ? (<div> Loading contests...</div >) : (
+          <div>
+            <ShowContest upcomingContests={upcomingContests} pastContests={pastContests} />
+          </div>
+        )
       }
-    };
 
-    fetchData();
-  }, []);
+    </div>
 
 
+
+  );
+}
+
+function ShowContest({ upcomingContests, pastContests }: { upcomingContests: Icontest[], pastContests: Icontest[] }) {
   return (
     <div className="min-h-screen">
       <section className="bg-white dark:bg-gray-900 py-8 md:py-12">
@@ -99,5 +105,5 @@ export function Contests() {
         </div>
       </section>
     </div>
-  );
+  )
 }
