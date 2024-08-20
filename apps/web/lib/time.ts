@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function parseClock(duration: number): string {
   // pad everything with 0s
   const days = Math.floor(duration / 86400);
@@ -49,4 +51,16 @@ export function parseOldDate(date: Date): string {
   }
 
   return `${Math.floor(timeSince / 86400)} days ago`;
+}
+
+
+export const convertToIST = (date: Date) => {
+
+  date.setHours(date.getHours() + 5);
+  date.setMinutes(date.getMinutes() + 30);
+  return date;
+}
+
+export const formattedDateTime = (date: Date) => {
+  return moment(date).utcOffset("+05:30").format('DD / MM / YYYY - hh:mm A');
 }

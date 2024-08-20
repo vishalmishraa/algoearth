@@ -1,11 +1,59 @@
-import { getExistingContest, getUpCommingContest } from "../controllers/contest";
+"use client"
+import { useEffect, useState } from "react";
 import { ContestCard } from "./ContestCard";
+import { Icontest } from "./SelectProblemsTable";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-export async function Contests() {
-  const [upcomingContests, pastContests] = await Promise.all([
-    getUpCommingContest(),
-    getExistingContest(),
-  ]);
+export function Contests() {
+
+  const [upcomingContests, setUpcomingContests] = useState<Icontest[]>([]);
+  const [pastContests, setPastContests] = useState<Icontest[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const upConsRes = await axios.get('/api/contest/upcoming');
+        if (upConsRes.status !== 200) {
+          throw new Error(upConsRes.data.message);
+        }
+        setUpcomingContests(upConsRes.data);
+      } catch (error: any) {
+        console.error(error);
+        toast.error(error.message || "An error occurred while fetching contests.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const pastConsRes = await axios.get('/api/contest/past');
+        if (pastConsRes.status !== 200) {
+          throw new Error(pastConsRes.data.message);
+        }
+        setPastContests(pastConsRes.data);
+      } catch (error: any) {
+        console.error(error);
+        toast.error(error.message || "An error occurred while fetching contests.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
   return (
     <div className="min-h-screen">
       <section className="bg-white dark:bg-gray-900 py-8 md:py-12">
@@ -17,13 +65,13 @@ export async function Contests() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {upcomingContests.map((contest) => (
+            {upcomingContests && upcomingContests.map((contest) => (
               <ContestCard
                 key={contest.id}
                 title={contest.title}
                 id={contest.id}
-                startTime={contest.startTime}
-                endTime={contest.endTime}
+                startTime={new Date(contest.startTime)}
+                endTime={new Date(contest.endTime)}
               />
             ))}
           </div>
@@ -38,13 +86,13 @@ export async function Contests() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pastContests.map((contest) => (
+            {pastContests && pastContests.map((contest) => (
               <ContestCard
                 key={contest.id}
                 title={contest.title}
                 id={contest.id}
-                startTime={contest.startTime}
-                endTime={contest.endTime}
+                startTime={new Date(contest.startTime)}
+                endTime={new Date(contest.endTime)}
               />
             ))}
           </div>
