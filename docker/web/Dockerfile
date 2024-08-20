@@ -25,5 +25,5 @@ EXPOSE 3000
 WORKDIR /usr/src/app/apps/web
 
 # Command to start both services
-RUN npm run build 
+RUN npm run build || (cat /usr/src/app/apps/web/.next/build-manifest.json && exit 1)
 CMD ["npm", "start"]
