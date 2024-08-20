@@ -35,7 +35,7 @@ export interface IProblems {
     contests: IContestProblem[]
 }
 
-export function SelectProblemsTable({ contestId, hight, setNumberOfProblems, selectedProblems , setSelectedProblems }: {
+export function SelectProblemsTable({ contestId, hight, setNumberOfProblems, selectedProblems, setSelectedProblems }: {
     selectedProblems: {
         problemid: string;
         contestId: string;
@@ -55,8 +55,7 @@ export function SelectProblemsTable({ contestId, hight, setNumberOfProblems, sel
             const fetchData = async () => {
                 setLoading(true);
 
-                const ProblemsResponse = await fetch(`api/problems`);
-                const problems: IProblems[] = await ProblemsResponse.json();
+                const problems: IProblems[] = await (await axios.get(`api/problems`)).data
                 setProblems(problems);
 
                 setLoading(false);
