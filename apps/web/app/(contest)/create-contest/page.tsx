@@ -12,6 +12,7 @@ import { SelectProblemsTable } from "@/components/SelectProblemsTable"
 import moment from "moment"
 import { useRouter } from "next/navigation"
 import { toast } from "react-toastify"
+import axios from "axios"
 
 export default function createContest() {
     const [newContest, setNewContest] = useState<Icontest>()
@@ -27,8 +28,7 @@ export default function createContest() {
             const fetchData = async () => {
                 setLoading(true);
 
-                const ProblemsResponse = await fetch(`api/problems`);
-                const problems: IProblems[] = await ProblemsResponse.json();
+                const problems: IProblems[] = await (await axios.get(`api/problems`)).data
                 setProblems(problems);
 
                 setLoading(false);

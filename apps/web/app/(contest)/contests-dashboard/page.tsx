@@ -53,8 +53,8 @@ const ContestDashboardPage = () => {
                 const contest: Icontest[] = (await axios.get(`api/contest`)).data;
                 setContests(contest);
 
-                const ProblemsResponse = await fetch(`api/problems`);
-                const problems: IProblems[] = await ProblemsResponse.json();
+                const problems: IProblems[] = await (await axios.get(`api/problems`)).data
+
                 setProblems(problems);
 
                 setLoading(false);
