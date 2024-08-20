@@ -49,15 +49,15 @@ export const getExistingContest = async () => {
 
 export const getContest = async (contestId: string) => {
     const session = await getServerSession(authOptions);
-    const contest = await db.contest.findMany({
+    const contest = await db.contest.findFirst({
         where: {
             id: contestId,
             hidden: false,
         },
         include: {
             problems: {
-                include: {
-                    problem: true
+                select: {
+                    problem:true
                 }
             },
             contestSubmissions: {
@@ -69,4 +69,14 @@ export const getContest = async (contestId: string) => {
     });
 
     return contest;
+}
+
+export const getContestByUserId = async (userId: string) => {
+    const contests = await db.contest.findMany({
+        where: {
+            authorId: userId
+        }
+    });
+
+    return contests;
 }

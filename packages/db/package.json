@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@lifeomic/attempt": "^3.1.0",
     "@prisma/client": "5.15.0",
     "prisma": "^5.12.0"
   },

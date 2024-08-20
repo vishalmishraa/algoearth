@@ -4,9 +4,9 @@
 import { Chivo } from "next/font/google";
 import { Rubik } from "next/font/google";
 import "./globals.css";
-import { Appbar } from "../components/Appbar";
+import { Appbar } from "@/components/Appbar";
 import { cn } from "@/lib/utils";
-// import { Footer } from "../components/Footer";
+// import Footer from "@/components/footer";
 import { Providers, ThemeProvider } from "../providers";
 
 const chivo = Chivo({
@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased", chivo.variable + " " + rubik.variable)}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <Providers>
             <Appbar />
             {children}

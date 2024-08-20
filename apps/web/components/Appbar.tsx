@@ -4,6 +4,7 @@ import Link from "next/link";
 // import { ModeToggle } from "./ModeToggle";
 import { Button } from "./ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { ButtonLoading } from "./Loading";
 
 export function Appbar() {
     const { data: session, status: sessionStatus } = useSession();
@@ -41,7 +42,7 @@ export function Appbar() {
 
             )}
 
-            {isLoading && <div className="flex items-center gap-4"></div>}
+            {isLoading && <div className="flex items-center gap-4"><ButtonLoading/></div>}
         </header>
     );
 }

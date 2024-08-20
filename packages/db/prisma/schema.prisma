@@ -39,8 +39,8 @@ model Contest {
   author             User               @relation(fields: [authorId], references: [id])
 }
 
-model ContestProblem {
-  id        String
+model ContestProblem { 
+  id        String   @default(uuid())
   contestId String
   problemId String
   createdAt DateTime @default(now())
@@ -50,7 +50,7 @@ model ContestProblem {
   index     Int
   solved    Int      @default(0)
 
-  @@id([contestId, problemId])
+  @@id([contestId, problemId ])
 }
 
 model Problem {
