@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased", chivo.variable + " " + rubik.variable)}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <Providers>
             <Appbar />
             {children}
