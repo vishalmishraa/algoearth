@@ -1,6 +1,7 @@
 FROM node:20-alpine
 
 ARG DATABASE_URL
+ARG REDIS_URL
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
@@ -16,7 +17,7 @@ COPY turbo.json /usr/src/app/turbo.json
 RUN npm install
 
 # Generate Prisma client
-RUN cd packages/db && DATABASE_URL=$DATABASE_URL npx prisma generate
+RUN cd packages/db && DATABASE_URL=$DATABASE_URL REDIS_URL=$REDIS_URL npx prisma generate
 
 # Expose ports for both applications
 EXPOSE 3000
