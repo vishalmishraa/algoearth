@@ -1,43 +1,53 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { ArrowRight, Code, Trophy } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="bg-white dark:bg-gray-900 py-8 md:py-12">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              Welcome to Algo Earth
+    <section className="bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 py-16 md:py-24 relative">
+      <div className="absolute inset-0 md:hidden">
+        <Image
+          src="/hero.webp"
+          layout="fill"
+          objectFit="cover"
+          alt="AlgoEarth Coding"
+          className="opacity-10 blur-sm"
+        />
+      </div>
+      <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-600 dark:text-indigo-400 leading-tight">
+              Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">Algo Earth</span>
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mb-6">
-              At AlgoEarth, we provide a seamless, engaging, and competitive environment to test and showcase your programming skills. Whether you&apos;re a beginner or an advanced coder, our platform is tailored to offer you the best experience.Ready to embark on your coding journey?
+            <p className="text-lg text-gray-600 dark:text-gray-300">
+              Embark on an exciting coding journey with AlgoEarth. Our platform offers a seamless, engaging, and competitive environment to test and showcase your programming skills. Whether you're a beginner or an advanced coder, we're here to elevate your coding experience.
             </p>
-            <div className="flex gap-4 pt-16">
-              <Link
-                href="/contests-dashboard"
-                prefetch={false}
-              >
-                <Button className="px-20 py-6 rounded-full border-2 border-gray-100" variant={'secondary'}>Contests Dashboard</Button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/contests" prefetch={false}>
+                <Button className="w-full sm:w-auto px-8 py-3 text-lg font-semibold rounded-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-300 flex items-center justify-center">
+                  <Trophy className="mr-2 h-5 w-5" />
+                  View Contests
+                </Button>
               </Link>
-              <Link
-                href="/contests"
-                prefetch={false}
-              >
-                <Button className="px-20 py-6 rounded-full border-gray-300" variant={'outline'}>{"View Contest"}</Button>
+              <Link href="/problems" prefetch={false}>
+                <Button variant="outline" className="w-full sm:w-auto px-8 py-3 text-lg font-semibold rounded-full border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors duration-300 flex items-center justify-center">
+                  <Code className="mr-2 h-5 w-5" />
+                  View Problems
+                </Button>
               </Link>
             </div>
           </div>
-          <div className="hidden md:block">
+          <div className="relative hidden md:block">
+            <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg blur opacity-25"></div>
             <Image
               src="/hero.webp"
-              width="700"
-              height="500"
-              alt="algoearth"
-              className="rounded-lg"
+              width={700}
+              height={500}
+              alt="AlgoEarth Coding"
+              className="relative rounded-lg shadow-2xl"
             />
-
           </div>
         </div>
       </div>

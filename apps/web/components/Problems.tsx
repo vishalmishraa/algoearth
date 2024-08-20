@@ -1,61 +1,67 @@
 import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    CardContent,
-    CardFooter,
-  } from "./ui/card";
-  import { getAllProblems, getProblems } from "../controllers/problem";
-  import { PrimaryButton } from "./LinkButton";
-  
-  export async function Problems() {
-    const problems = await getAllProblems();
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import { getAllProblems } from "../controllers/problem";
+import { Button } from "./ui/button";
+import Link from "next/link";
+import { Code, Star, Users } from "lucide-react";
 
-    return (
-      <section className="bg-white dark:bg-gray-900 py-8 md:py-12 min-h-screen">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">Popular Problems</h2>
-            <p className="text-gray-500 dark:text-gray-400">
-              Check out the most popular programming problems on algoearth.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {problems.map((problem) => (
-              <ProblemCard problem={problem} key={problem.id} />
-            ))}
-          </div>
+export async function Problems() {
+  const problems = await getAllProblems();
+
+  return (
+    <section className="bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 py-12 md:py-16 min-h-screen flex items-center justify-center">
+      <div className="container mx-auto px-4 md:px-0 max-w-4xl">
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 mb-3">Popular Problems</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300">
+            Challenge yourself with the most popular programming problems on AlgoEarth.
+          </p>
         </div>
-      </section>
-    );
-  }
-  
-  function ProblemCard({ problem }: { problem: any }) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{problem.title}</CardTitle>
-          <CardDescription>Easy problem for beginners</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 dark:text-gray-400">Difficulty</p>
-              <p>{problem.difficulty}</p>
-            </div>
-            <div>
-              <p className="text-gray-500 dark:text-gray-400">Submissions</p>
-              <p>{problem.solved}</p>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <PrimaryButton href={`/problem/${problem.id}`}>
-            View Problem
-          </PrimaryButton>
-        </CardFooter>
-      </Card>
-    );
-  }
-  
+        <div className="overflow-x-auto">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Difficulty</TableHead>
+                <TableHead>Submissions</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {problems.map((problem) => (
+                <TableRow key={problem.id}>
+                  <TableCell className="font-medium">{problem.title}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <Star className="w-4 h-4 text-yellow-500 mr-2" />
+                      <span>{problem.difficulty}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <Users className="w-4 h-4 text-green-500 mr-2" />
+                      <span>{problem.solved} submissions</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Button asChild className="bg-slate-900 text-white hover:bg-slate-950">
+                      <Link href={`/problem/${problem.id}`}>
+                        View Problem
+                      </Link>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </section>
+  );
+}
