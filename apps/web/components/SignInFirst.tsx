@@ -1,24 +1,27 @@
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { Button } from "./ui/button"
+import { LockIcon } from "lucide-react"
 
 export default function SignInFirst() {
   return (
-    <Card className="w-full max-w-md mx-auto mt-10">
-      <CardHeader className="space-y-2 text-center">
-        <CardTitle className="text-2xl font-bold">Access Restricted</CardTitle>
-        <CardDescription>
-          You need to be logged in to access the dashboard. Please click the button below to Sign in.
+    <Card className="w-full max-w-md mx-auto mt-10 shadow-lg">
+      <CardHeader className="space-y-4 text-center">
+        <div className="flex justify-center">
+          <LockIcon className="w-12 h-12 text-gray-400" />
+        </div>
+        <CardTitle className="text-3xl font-bold text-primary">Access Restricted</CardTitle>
+        <CardDescription className="text-lg text-gray-600">
+          To access the dashboard, please sign in using the button below.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex justify-center">
+      <CardContent className="flex justify-center pb-6">
         <Button
           onClick={() => signIn()}
-          className="px-4 py-2"
+          className="px-6 py-3 text-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105"
         >
-          Sign in
+          Sign In
         </Button>
       </CardContent>
     </Card>
