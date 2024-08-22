@@ -1,14 +1,14 @@
-import { Icontest, IProblems } from "@/app/(contest)/contests-dashboard/page"
+import { IContest, IProblems } from "@repo/common/types"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
 export function useCreateContest() {
-    const [newContest, setNewContest] = useState<Icontest>()
+    const [newContest, setNewContest] = useState<IContest>()
     const [numberOfProblem, setNumberOfProblems] = useState<number>(0)
     const [problems, setProblems] = useState<IProblems[]>([]);
     const [loading, setLoading] = useState(true);
-    const [createContest, setCreateContest] = useState<Icontest>()
+    const [createContest, setCreateContest] = useState<IContest>()
 
     useEffect(() => {
         try {
@@ -34,15 +34,15 @@ export function useCreateContest() {
         console.log({ name, value, type });
         if ((name === 'startTime' || name === 'endTime') && value !== '') {
             const formattedValue = new Date(value).toISOString();
-            setCreateContest((prevState: Icontest | undefined) => ({
+            setCreateContest((prevState: IContest | undefined) => ({
                 ...prevState,
                 [name]: formattedValue
-            } as Icontest));
+            } as IContest));
         } else {
-            setCreateContest((prevState: Icontest | undefined) => ({
+            setCreateContest((prevState: IContest | undefined) => ({
                 ...prevState,
                 [name]: value
-            } as Icontest));
+            } as IContest));
         }
     }
 

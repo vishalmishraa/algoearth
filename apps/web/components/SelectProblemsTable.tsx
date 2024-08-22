@@ -1,39 +1,10 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { IProblems } from "@repo/common/types"
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from "react-toastify"
-
-
-export interface Icontest {
-    id: string;
-    title: string;
-    description: string;
-    startTime: Date;
-    hidden: boolean;
-    endTime: Date;
-    createdAt: Date;
-    updatedAt: Date;
-    leaderboard: boolean;
-    authorId: string;
-}
-
-export interface IContestProblem {
-    contestId: string;
-    problemId: string;
-}
-
-export interface IProblems {
-    id: string;
-    title: string;
-    description: string;
-    hidden: boolean;
-    slug: string;
-    solved: number;
-    difficulty: string;
-    contests: IContestProblem[]
-}
 
 export function SelectProblemsTable({ contestId, hight, setNumberOfProblems }: {
     contestId: string,

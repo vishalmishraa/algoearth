@@ -1,42 +1,13 @@
+import { IContest } from "@repo/common/types"
 import axios from "axios"
 import moment from 'moment'
 import React, { useState } from 'react'
 import { toast } from "react-toastify"
 
-export interface Icontest {
-    id: string;
-    title: string;
-    description: string;
-    startTime: Date;
-    hidden: boolean;
-    endTime: Date;
-    createdAt: Date;
-    updatedAt: Date;
-    leaderboard: boolean;
-    authorId: string;
-}
-
-export interface IContestProblem {
-    contestId: string;
-    problemId: string;
-}
-
-export interface IProblems {
-    id: string;
-    title: string;
-    description: string;
-    hidden: boolean;
-    slug: string;
-    solved: number;
-    difficulty: string;
-    contests: IContestProblem[]
-}
-
-
-export default function useConttestTable({ contests, setContests }: { contests: Icontest[], setContests: React.Dispatch<React.SetStateAction<Icontest[]>> }) {
+export default function useConttestTable({ contests, setContests }: { contests: IContest[], setContests: React.Dispatch<React.SetStateAction<IContest[]>> }) {
 
     const [editingContestId, setEditingContestId] = useState<string | null>(null);
-    const [editingContest, setEditingContest] = useState<Icontest | null>(null);
+    const [editingContest, setEditingContest] = useState<IContest | null>(null);
     const [numberOfProblem, setNumberOfProblems] = useState<number>(0)
     const [deletingContestId, setDeletingContestId] = useState<string | null>(null)
 

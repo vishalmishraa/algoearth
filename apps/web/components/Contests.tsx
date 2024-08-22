@@ -1,14 +1,14 @@
 "use client"
 import { useEffect, useState } from "react";
 import { ContestCard } from "./ContestCard";
-import { Icontest } from "./SelectProblemsTable";
+import { IContest } from "@repo/common/types";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
 
 export function Contests() {
-  const [upcomingContests, setUpcomingContests] = useState<Icontest[]>([]);
-  const [pastContests, setPastContests] = useState<Icontest[]>([]);
+  const [upcomingContests, setUpcomingContests] = useState<IContest[]>([]);
+  const [pastContests, setPastContests] = useState<IContest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export function Contests() {
   );
 }
 
-function ShowContest({ upcomingContests, pastContests }: { upcomingContests: Icontest[], pastContests: Icontest[] }) {
+function ShowContest({ upcomingContests, pastContests }: { upcomingContests: IContest[], pastContests: IContest[] }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800">
       <section className="py-12 md:py-16">

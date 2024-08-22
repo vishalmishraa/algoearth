@@ -12,41 +12,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import useConttestTable from "@/hooks/useUserContestTable"
+import { IContest } from "@repo/common/types"
 import { TrashIcon } from "lucide-react"
 import Link from 'next/link'
 import React from 'react'
 
-export interface Icontest {
-    id: string;
-    title: string;
-    description: string;
-    startTime: Date;
-    hidden: boolean;
-    endTime: Date;
-    createdAt: Date;
-    updatedAt: Date;
-    leaderboard: boolean;
-    authorId: string;
-}
-
-export interface IContestProblem {
-    contestId: string;
-    problemId: string;
-}
-
-export interface IProblems {
-    id: string;
-    title: string;
-    description: string;
-    hidden: boolean;
-    slug: string;
-    solved: number;
-    difficulty: string;
-    contests: IContestProblem[]
-}
 
 
-export default function UserContestTable({ contests, setContests }: { contests: Icontest[], setContests: React.Dispatch<React.SetStateAction<Icontest[]>> }) {
+export default function UserContestTable({ contests, setContests }: { contests: IContest[], setContests: React.Dispatch<React.SetStateAction<IContest[]>> }) {
 
     const {
         convertToIST,

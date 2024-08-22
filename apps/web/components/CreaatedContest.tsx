@@ -1,12 +1,13 @@
 
-import { Icontest } from "@/app/(contest)/contests-dashboard/page"
+import { IContest } from "@repo/common/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import moment from "moment"
 import { useRouter } from "next/navigation"
 import { toast } from "react-toastify"
+import { formatDateTime, convertToIST} from "@/lib/time"
 
-export function CreaatedContest({ contest, numberOfProblem }: { contest: Icontest, numberOfProblem: number }) {
+export function CreaatedContest({ contest, numberOfProblem }: { contest: IContest, numberOfProblem: number }) {
     const formattedDateTime = (date: Date) => {
         return moment(date).utcOffset("+05:30").format('DD / MM / YYYY - hh:mm A');
     }

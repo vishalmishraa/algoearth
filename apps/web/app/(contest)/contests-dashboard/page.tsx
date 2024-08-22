@@ -4,45 +4,15 @@ import SignInFirst from '@/components/SignInFirst'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import UserContestTable from '@/components/UserContestTable'
+import { IContest, IProblems } from "@repo/common/types"
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-export interface Icontest {
-    id: string;
-    title: string;
-    description: string;
-    startTime: Date;
-    hidden: boolean;
-    endTime: Date;
-    createdAt: Date;
-    updatedAt: Date;
-    leaderboard: boolean;
-    authorId: string;
-}
-
-export interface IContestProblem {
-    contestId: string;
-    problemId: string;
-}
-
-export interface IProblems {
-    id: string;
-    title: string;
-    description: string;
-    hidden: boolean;
-    slug: string;
-    solved: number;
-    difficulty: string;
-    contests: IContestProblem[]
-}
-
-
-
 const ContestDashboardPage = () => {
     const { data, status } = useSession();
-    const [contests, setContests] = useState<Icontest[]>([]);
+    const [contests, setContests] = useState<IContest[]>([]);
     const [problems, setProblems] = useState<IProblems[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -50,7 +20,7 @@ const ContestDashboardPage = () => {
         try {
             const fetchData = async () => {
                 setLoading(true);
-                const contest: Icontest[] = (await axios.get(`api/contest`)).data;
+                const contest: IContest[] = (await axios.get(`api/contest`)).data;
                 setContests(contest);
 
                 const problems: IProblems[] = await (await axios.get(`api/problems`)).data
@@ -93,7 +63,7 @@ const ContestDashboardPage = () => {
                 <div>
                     {contests.length !== 0 ? (
                         <div>
-                            <UserContestTable contests={contests} setContests={setContests}/>
+                            <UserContestTable contests={contests} setContests={setContests} />
                         </div>
                     ) : (
                         <Card className="w-full max-w-md mx-auto mt-8">
