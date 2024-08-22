@@ -35,20 +35,15 @@ export interface IProblems {
     contests: IContestProblem[]
 }
 
-export function SelectProblemsTable({ contestId, hight, setNumberOfProblems, selectedProblems, setSelectedProblems }: {
-    selectedProblems: {
-        problemid: string;
-        contestId: string;
-    }[],
-    setSelectedProblems: React.Dispatch<React.SetStateAction<{
-        problemid: string;
-        contestId: string;
-    }[]>>, contestId: string,
+export function SelectProblemsTable({ contestId, hight, setNumberOfProblems }: {
+    contestId: string,
     hight: number,
     setNumberOfProblems: React.Dispatch<React.SetStateAction<number>>
 }) {
     const [loading, setLoading] = useState(false);
     const [problems, setProblems] = useState<IProblems[]>([]);
+    const [selectedProblems, setSelectedProblems] = useState<{ problemid: string, contestId: string }[]>([]);
+
 
     useEffect(() => {
         try {

@@ -17,9 +17,9 @@ export function Appbar() {
     return (
         <header className="bg-gradient-to-r from-purple-900 to-blue-900 text-white px-4 md:px-6 py-4">
             <div className="container mx-auto flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105" prefetch={false}>
+                <Link href="/" className="flex gap-2 transition-transform hover:scale-105" prefetch={false}>
                     <Code className="h-8 w-8" />
-                    <span className="text-2xl font-bold">AlgoEarth</span>
+                    <span className="text-2xl font-bold ">AlgoEarth</span>
                 </Link>
                 <nav className="hidden md:flex items-center gap-8">
                     <Link href="/contests" className="flex items-center gap-2 hover:text-indigo-200 transition-colors" prefetch={false}>
@@ -32,16 +32,16 @@ export function Appbar() {
                     </Link>
                 </nav>
                 {!isLoading && session?.user && (
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4" >
                         {showContestCreatorHub && (
                             <Link href="/contests-dashboard" prefetch={false}>
-                                <Button className="bg-green-600 text-white hover:bg-green-700 transition-colors">
+                                <Button className="bg-green-600 text-white hidden md:flex hover:bg-green-700 transition-colors">
                                     <LayoutDashboard className="h-5 w-5 mr-2" />
                                     Contest Creator Hub
                                 </Button>
                             </Link>
                         )}
-                        <Button onClick={() => signOut()} variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-purple-600 transition-colors">
+                        <Button onClick={() => signOut()} variant="outline" className=" max-sm:absolute max-sm:mr-4 max-sm:right-0 bg-transparent border-white text-white hover:bg-white hover:text-purple-600 transition-colors">
                             <LogOut className="h-5 w-5 mr-2" />
                             Logout
                         </Button>
@@ -49,7 +49,7 @@ export function Appbar() {
                 )}
 
                 {!isLoading && !session?.user && (
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 max-sm:absolute max-sm:mr-4 max-sm:right-0 ">
                         <Button onClick={() => signIn()} variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-purple-600 transition-colors">
                             <LogIn className="h-5 w-5 mr-2" />
                             Sign in
