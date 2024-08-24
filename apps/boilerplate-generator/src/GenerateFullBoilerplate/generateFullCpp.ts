@@ -18,7 +18,7 @@ export default function generateFullCpp({
         })
         .join("\n  ");
     const outputType = outputFields[0].type;
-    const functionCall = `std::${outputType} result = ${functionName}(${inputFields.map((field) => field.name).join(", ")});`;
+    const functionCall = `${outputType} result = ${functionName}(${inputFields.map((field) => field.name).join(", ")});`;
     const outputWrite = `std::cout << result << std::endl;`;
 
     return `  #ifndef _GLIBCXX_NO_ASSERT
@@ -109,7 +109,6 @@ export default function generateFullCpp({
                 #include <unordered_set>
                 #endif
 
-                using namespace std;
 
             ##USER_CODE_HERE##
 
