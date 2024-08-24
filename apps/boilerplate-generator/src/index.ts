@@ -5,6 +5,7 @@ import ProblemParser from './Parser/Parser';
 import generateFullC from './GenerateFullBoilerplate/generateFullC';
 import generateFullJava from './GenerateFullBoilerplate/generateFullJava';
 import generateFullRust from './GenerateFullBoilerplate/generateFullRust';
+import generateFullCpp from './GenerateFullBoilerplate/generateFullCpp';
 import generateFullPython from './GenerateFullBoilerplate/generateFullPython';
 import generateFullJs from './GenerateFullBoilerplate/generateFullJs';
 import GeneratePartial from './GeneratePartialBoilerplate/GeneratePartial';
@@ -87,7 +88,7 @@ function generateFullBoilerPlate(dirPath: string, folder: string) {
     const data = parser.parse(templateContent);
 
     //generate the boilerplate
-    const cppCode = generateFullC(data)
+    const cppCode = generateFullCpp(data)
     const javaCode = generateFullJava(data)
     const rustCode = generateFullRust(data);
     const pythonCode = generateFullPython(data)
