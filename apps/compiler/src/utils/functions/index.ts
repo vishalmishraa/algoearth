@@ -13,7 +13,7 @@ export function getCommnad(language: string) {
             command = 'gcc -o output ./box/yourcode.c && ./box/output';
             break;
         case 'java':
-            command = 'javac ./box/yourcode.java && java ./box/yourcode';
+            command = 'javac ./box/yourcode.java && java ./box/Yourcode';
             break;
         case 'javascript':
             command = 'node ./box/yourcode.js';

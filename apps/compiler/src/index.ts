@@ -34,8 +34,6 @@ app.post('/submissions/batch', async (req, res) => {
         const problems = compilerSubmission.parse(req.body);
         const jobTokens = [];
 
-        console.log(problems)
-
         for (const problem of problems.submissions) {
             
             const language = COMPILER_LANGUAGE_MAPPING[problem.language_id]?.monaco;

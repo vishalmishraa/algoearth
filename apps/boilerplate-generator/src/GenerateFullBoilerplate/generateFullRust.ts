@@ -1,6 +1,7 @@
-type TFields = Array<{ type: string; name: string }>;
 import MakeType from "../Parser/MapDataType";
 import { IGenerator } from "../Parser/types";
+import dotenv from 'dotenv'
+dotenv.config();
 
 export default function generateFullRust({
     problemName,
@@ -32,7 +33,7 @@ export default function generateFullRust({
             ##USER_CODE_HERE##
 
             fn main() -> io::Result<()> {
-            let input = read_to_string("/dev/problems/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt")?;
+            let input = read_to_string("${process.env.PV_DIR_PATH}/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt")?;
             let mut lines = input.lines();
             ${inputReads}
             ${functionCall}
