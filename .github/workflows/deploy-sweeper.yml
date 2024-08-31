@@ -6,11 +6,6 @@ on:
       - 'main'
     paths:
       - 'apps/sweeper/**'
-  pull_request:
-    branches:
-      - 'main'
-    paths:
-      - 'apps/sweeper/**'
 
 jobs:
   Deploy-sweeper:

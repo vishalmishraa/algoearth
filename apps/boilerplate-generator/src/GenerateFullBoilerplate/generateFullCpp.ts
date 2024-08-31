@@ -1,5 +1,7 @@
 import { IGenerator } from '../Parser/types'
 import MakeType from "../Parser/MapDataType";
+import dotenv from 'dotenv'
+dotenv.config();
 
 export default function generateFullCpp({
     problemName,
@@ -113,7 +115,7 @@ export default function generateFullCpp({
             ##USER_CODE_HERE##
 
             int main() {
-            std::ifstream file("/dev/problems/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt");
+            std::ifstream file("${process.env.PV_DIR_PATH}/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt");
             std::vector<std::string> lines;
             std::string line;
             while (std::getline(file, line)) lines.push_back(line);

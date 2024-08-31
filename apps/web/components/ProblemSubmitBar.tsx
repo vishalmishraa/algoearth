@@ -125,8 +125,7 @@ function SubmitProblem({
             if (response.data.submission.status === "AC") {
                 setStatus(SubmitStatus.ACCEPTED);
                 setTestcases(response.data.submission.testcases);
-                toast.success("Accepted!");
-                return;
+                return toast.success("Accepted!");
             } else {
                 setStatus(SubmitStatus.FAILED);
                 toast.error("Failed :(");
