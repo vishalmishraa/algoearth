@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-compiler
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: worker-compiler
+  template:
+    metadata:
+      labels:
+        app: worker-compiler
+    spec:
+      containers:
+        - name: worker-compiler
+          image: vishal022/algoearth-worker-compiler:latest
+          volumeMounts:
+          - name: problems
+            mountPath: /dev/problems
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: algoearth-wc
+                  key: DATABASE_URL
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: algoearth-wc
+                  key: REDIS_URL
+      volumes:
+      - name: problems
+        persistentVolumeClaim:
+          claimName: problems-pvc

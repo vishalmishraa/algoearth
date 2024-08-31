@@ -1,6 +1,7 @@
 import MakeType from "../Parser/MapDataType";
 import { IGenerator } from "../Parser/types";
-
+import dotenv from 'dotenv'
+dotenv.config();
 
 export default function generateFullC({
     problemName,
@@ -33,7 +34,7 @@ export default function generateFullC({
             ##USER_CODE_HERE##
             
             int main() {
-                FILE *file = fopen("/dev/problems/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt", "r");
+                FILE *file = fopen("${process.env.PV_DIR_PATH}/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt", "r");
                 vector<string> lines;
                 string line;
                 while (fgets(line, sizeof(line), file)) lines.push_back(line);

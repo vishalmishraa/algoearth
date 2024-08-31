@@ -1,5 +1,7 @@
 import MakeType from "../Parser/MapDataType";
 import { IGenerator } from "../Parser/types";
+import dotenv from 'dotenv'
+dotenv.config();
 
 export default function generateFullJs({
     problemName,
@@ -22,7 +24,7 @@ export default function generateFullJs({
 
     return `##USER_CODE_HERE##
 
-            const input = require('fs').readFileSync('/dev/problems/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt', 'utf8').trim().split('\\n').join(' ').split(' ');
+            const input = require('fs').readFileSync('${process.env.PV_DIR_PATH}/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt', 'utf8').trim().split('\\n').join(' ').split(' ');
             ${inputReads}
             ${functionCall}
             console.log(result);

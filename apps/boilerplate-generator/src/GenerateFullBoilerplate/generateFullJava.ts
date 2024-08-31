@@ -1,6 +1,8 @@
 type TFields = Array<{ type: string; name: string }>;
 import MakeType from "../Parser/MapDataType";
 import { IGenerator } from "../Parser/types";
+import dotenv from 'dotenv'
+dotenv.config();
 
 export default function generateFullJava({
     problemName,
@@ -54,7 +56,7 @@ export default function generateFullJava({
                 ##USER_CODE_HERE##
 
                 public static void main(String[] args) {
-                    String filePath = "/dev/problems/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
+                    String filePath = "${process.env.PV_DIR_PATH}/${problemName.replace(" ", "-")}/tests/inputs/##INPUT_FILE_INDEX##.txt"; 
                     List<String> lines = readLinesFromFile(filePath);
                     ${inputReads}
                     ${functionCall}
