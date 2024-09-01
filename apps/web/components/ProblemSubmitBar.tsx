@@ -157,7 +157,7 @@ function SubmitProblem({
 
             if (response.data.status === 400) {
                 setStatus(SubmitStatus.FAILED);
-                toast.error("Try again ! something went wrong");
+                toast.error(`error : ${response.data.message}`);
                 return;
             }
 
