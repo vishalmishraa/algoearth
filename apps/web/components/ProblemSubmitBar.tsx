@@ -147,21 +147,23 @@ function SubmitProblem({
                 token: token,
             });
 
-            if (response.status === 429) {
+            console.log(response.data)
+
+            if (response.data.status === 429) {
                 setStatus(SubmitStatus.FAILED);
                 toast.error("Try again after sometime");
                 return;
             };
 
-            if (response.status === 400) {
+            if (response.data.status === 400) {
                 setStatus(SubmitStatus.FAILED);
                 toast.error("Try again ! something went wrong");
                 return;
             }
 
-            if (response.status != 200) {
+            if (response.data.status != 200) {
                 setStatus(SubmitStatus.FAILED);
-                toast.error("Failed to submit");
+                toast.error("Something went wrong");
                 return;
             };
 

@@ -81,133 +81,148 @@ function isMaliciousCode(code: string) {
 }
 
 export async function POST(req: NextRequest) {
-    //Check if user is logged in
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-        return NextResponse.json(
-            {
-                message: "You must be logged in to submit a problem",
-                status: 401
-            }
-        );
-    };
+    try {
 
-    //Check if user is allowed to submit
-    const allowed = await isRequestAllowed(session.user.id, 60);// 1 minute window for 2 requests
-    if (!allowed) {
-        return NextResponse.json(
-            {
-                message: "Rate limit exceeded",
-                status: 429
-            }
-        );
-    };
-
-
-    //get and check the submission input
-    const submissionInput = SubmissionInput.safeParse(await req.json());
-    if (!submissionInput.success) {
-        return NextResponse.json(
-            {
-                message: "Invalid submission",
-                status: 400
-            }
-        );
-    };
-
-    if (process.env.NODE_ENV === "production") {
-        let formData = new FormData();
-        formData.append('secret', CLOUD_FLARE_TURNSTILE_SECRET_KEY);
-        formData.append('response', submissionInput.data.token);
-
-        const turnstileResponse = await axios.post(CLOUD_FLARE_URL, formData);
-        if (!turnstileResponse.data.success) {
+        //Check if user is logged in
+        const session = await getServerSession(authOptions);
+        if (!session?.user) {
             return NextResponse.json(
                 {
-                    message: "Invalid token",
+                    message: "You must be logged in to submit a problem",
+                    status: 401
+                }
+            );
+        };
+
+        //Check if user is allowed to submit
+        const allowed = await isRequestAllowed(session.user.id, 60);// 1 minute window for 2 requests
+        if (!allowed) {
+            return NextResponse.json(
+                {
+                    message: "Rate limit exceeded",
+                    status: 429
+                }
+            );
+        };
+
+
+        //get and check the submission input
+        const submissionInput = SubmissionInput.safeParse(await req.json());
+        if (!submissionInput.success) {
+            return NextResponse.json(
+                {
+                    message: "Invalid submission",
                     status: 400
                 }
             );
         };
-    }
 
-    //get the problem
-    const dbProblem = await db.problem.findUnique({
-        where: {
-            id: submissionInput.data.problemId,
-        },
-    });
+        if (process.env.NODE_ENV === "production") {
+            let formData = new FormData();
+            formData.append('secret', CLOUD_FLARE_TURNSTILE_SECRET_KEY);
+            formData.append('response', submissionInput.data.token);
 
-    if (!dbProblem) {
-        return NextResponse.json(
-            {
-                message: "Problem not found",
-                status: 404
-            }
-        );
-    };
-
-    //get the problem from file-path
-    const problem = await getProblem(
-        dbProblem.slug,
-        submissionInput.data.languageId
-    );
-
-    if (isMaliciousCode(submissionInput.data.code)) {
-        console.log(`maliccious code detected : ${submissionInput.data.code} `)
-        return NextResponse.json(
-            {
-                message: "Malicious code detected",
-                status: 400
-            }
-        );
-    }
-
-    //replace the boilerplate code with user code
-    problem.fullBoilerplateCode = problem?.fullBoilerplateCode?.replace(
-        "##USER_CODE_HERE##",
-        submissionInput.data.code
-    );
-
-    //make the submission to judge0
-    const response = await axios.post(
-        `${JUDGE0_URI}/submissions/batch`,
-        {
-            submissions: problem.inputs.map((input, index) => ({
-                language_id: LANGUAGE_MAPPING[submissionInput.data.languageId]?.judge0,
-                source_code: problem.fullBoilerplateCode.replace(
-                    "##INPUT_FILE_INDEX##",
-                    index.toString()
-                ),
-                expected_output: problem.outputs[index],
-            })),
+            const turnstileResponse = await axios.post(CLOUD_FLARE_URL, formData);
+            if (!turnstileResponse.data.success) {
+                return NextResponse.json(
+                    {
+                        message: "Invalid token",
+                        status: 400
+                    }
+                );
+            };
         }
-    );
 
-
-    //create the submission in the database
-    const submission = await db.submission.create({
-        data: {
-            userId: session.user.id,
-            problemId: submissionInput.data.problemId,
-            code: submissionInput.data.code,
-            activeContestId: submissionInput.data.activeContestId,
-            testcases: {
-                connect: response.data
+        //get the problem
+        const dbProblem = await db.problem.findUnique({
+            where: {
+                id: submissionInput.data.problemId,
             },
-        },
-        include: {
-            testcases: true,
-        },
-    });
+        });
 
-    return NextResponse.json(
-        {
-            message: "Submission made",
-            id: submission.id,
-            status: 200,
+        if (!dbProblem) {
+            return NextResponse.json(
+                {
+                    message: "Problem not found",
+                    status: 404
+                }
+            );
+        };
+
+        //get the problem from file-path
+        const problem = await getProblem(
+            dbProblem.slug,
+            submissionInput.data.languageId
+        );
+
+        if (isMaliciousCode(submissionInput.data.code)) {
+            console.log(`maliccious code detected : ${submissionInput.data.code} `)
+            return NextResponse.json(
+                {
+                    message: "Malicious code detected",
+                    status: 400
+                }
+            );
         }
-    );
+
+        //replace the boilerplate code with user code
+        problem.fullBoilerplateCode = problem?.fullBoilerplateCode?.replace(
+            "##USER_CODE_HERE##",
+            submissionInput.data.code
+        );
+
+        //make the submission to judge0
+        const response = await axios.post(
+            `${JUDGE0_URI}/submissions/batch`,
+            {
+                submissions: problem.inputs.map((input, index) => ({
+                    language_id: LANGUAGE_MAPPING[submissionInput.data.languageId]?.judge0,
+                    source_code: problem.fullBoilerplateCode.replace(
+                        "##INPUT_FILE_INDEX##",
+                        index.toString()
+                    ),
+                    expected_output: problem.outputs[index],
+                })),
+            }
+        );
+
+        if (!response.data) {
+            throw new Error("No response from Judge0");
+        }
+
+        //create the submission in the database
+        const submission = await db.submission.create({
+            data: {
+                userId: session.user.id,
+                problemId: submissionInput.data.problemId,
+                code: submissionInput.data.code,
+                activeContestId: submissionInput.data.activeContestId,
+                testcases: {
+                    connect: response.data
+                },
+            },
+            include: {
+                testcases: true,
+            },
+        });
+
+        return NextResponse.json(
+            {
+                message: "Submission made",
+                id: submission.id,
+                status: 200,
+            }
+        );
+
+    } catch (error: any) {
+        console.log(error.message)
+        return NextResponse.json(
+            {
+                message: "something went wrong",
+                status: 500
+            }
+        );
+    }
 
 };
 
