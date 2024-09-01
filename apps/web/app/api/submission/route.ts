@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
         };
 
         //Check if user is allowed to submit
-        const allowed = await isRequestAllowed(session.user.id, 60);// 1 minute window for 2 requests
+        const allowed = await isRequestAllowed(session.user.id, 5);// 5 second window for 2 requests
         if (!allowed) {
             return NextResponse.json(
                 {
