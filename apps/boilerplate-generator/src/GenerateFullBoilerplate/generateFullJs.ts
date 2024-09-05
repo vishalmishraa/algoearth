@@ -14,6 +14,8 @@ export default function generateFullJs({
         .map((field) => {
             if (field.type.startsWith("list<")) {
                 return `const size_${field.name} = parseInt(input.shift());\nconst ${field.name} = input.splice(0, size_${field.name}).map(Number);`;
+            } else if (field.type === "string") {
+                return `const ${field.name} = input.shift();`;
             } else {
                 return `const ${field.name} = parseInt(input.shift());`;
             }
