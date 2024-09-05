@@ -117,21 +117,21 @@ export async function POST(req: NextRequest) {
             );
         };
 
-        if (process.env.NODE_ENV === "production") {
-            let formData = new FormData();
-            formData.append('secret', CLOUD_FLARE_TURNSTILE_SECRET_KEY);
-            formData.append('response', submissionInput.data.token);
+        // if (process.env.NODE_ENV === "production") {
+        //     let formData = new FormData();
+        //     formData.append('secret', CLOUD_FLARE_TURNSTILE_SECRET_KEY);
+        //     formData.append('response', submissionInput.data.token);
 
-            const turnstileResponse = await axios.post(CLOUD_FLARE_URL, formData);
-            if (!turnstileResponse.data.success) {
-                return NextResponse.json(
-                    {
-                        message: "Invalid token",
-                        status: 400
-                    }
-                );
-            };
-        }
+        //     const turnstileResponse = await axios.post(CLOUD_FLARE_URL, formData);
+        //     if (!turnstileResponse.data.success) {
+        //         return NextResponse.json(
+        //             {
+        //                 message: "Invalid token",
+        //                 status: 400
+        //             }
+        //         );
+        //     };
+        // }
 
         //get the problem
         const dbProblem = await db.problem.findUnique({

@@ -37,6 +37,7 @@ set-pro
 /.vscode
 apps/online-judge
 apps/runredisqueue
+/aws
 apps/worker-compiler/box
 # Debug
 npm-debug.log*

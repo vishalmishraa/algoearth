@@ -68,7 +68,10 @@ async function upsertProblemWithRetry(problemSlug: string, problemStatement: str
                 retries++;
                 console.log(`Retrying upsert operation for problem (${retries}/${MAX_RETRIES})...`);
                 await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-            } else {
+            } else if (error.code == 'P2002' && error.meta.modelName == 'Problem' &&  error.meta.target[0] == 'name' ) {
+                throw new Error("Tag exist");
+            }else{
+
                 throw error;
             }
         }
