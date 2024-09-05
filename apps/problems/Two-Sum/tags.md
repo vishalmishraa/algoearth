@@ -1,4 +1,0 @@
-  ARRAY
-  MATH
-  SORTING
-  GREEDY

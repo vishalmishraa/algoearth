@@ -1,3 +1,0 @@
-  ARRAY
-  STRING
-  GREEDY

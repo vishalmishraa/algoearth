@@ -110,6 +110,7 @@ export default function generateFullCpp({
                 #include <unordered_map>
                 #include <unordered_set>
                 #endif
+                using namespace std;
 
 
             ##USER_CODE_HERE##
