@@ -179,7 +179,7 @@ async function runCommand(command: string, code: string, language: string, expec
         const startTime = process.hrtime();
         const createdAt = new Date().toISOString();
 
-        exec(command, { timeout: 5000 }, (error, stdout, stderr) => {
+        exec(command, { timeout: 20000 }, (error, stdout, stderr) => {
 
             const endTime = process.hrtime(startTime);
             const timeTaken = parseFloat((endTime[0] + endTime[1] / 1e9).toFixed(3)); // Convert to seconds and milliseconds till 3 digits
