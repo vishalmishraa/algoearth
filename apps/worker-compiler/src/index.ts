@@ -202,6 +202,7 @@ async function runCommand(command: string, code: string, language: string, expec
                 });
                 return;
             }
+
             if (stderr) {
                 resolve({
                     stderr: `Stderr: ${stderr}`,
@@ -218,7 +219,11 @@ async function runCommand(command: string, code: string, language: string, expec
                 });
                 return;
             }
-            if (expected_output + '\n' !== stdout) {
+
+            stdout = stdout.trimEnd();
+            
+
+            if (expected_output !== stdout) {
                 console.log(`expected_output: ${expected_output}, stdout: ${stdout}`);
 
                 resolve({
