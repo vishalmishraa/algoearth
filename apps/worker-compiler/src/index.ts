@@ -5,6 +5,20 @@ import Redis from 'ioredis';
 import dotenv from 'dotenv'
 dotenv.config();
 
+async function checkDBConnection() {
+    try {
+        await db.$connect();
+        console.log('Database connection is successful');
+        return true;
+    } catch (error) {
+        console.error('Database connection error:', error);
+        return false;
+    }
+}
+
+checkDBConnection();
+
+
 const redis = new Redis(process.env.REDIS_URL!);
 
 redis.on('connect', () => {
