@@ -1,6 +1,12 @@
 import { ProblemStatement } from "../../../../components/ProblemStatement";
 import { ProblemSubmitBar } from "../../../../components/ProblemSubmitBar";
 import { getProblem } from "../../../../controllers/problem";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
+
 
 export default async function ProblemPage({
   params: { problemId },
@@ -26,15 +32,36 @@ export default async function ProblemPage({
           )
         }
       </div>
-      <main className="flex-1 py-2 md:py-5 grid md:grid-cols-2 gap-8 md:gap-12">
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
-          <div className="prose prose-stone dark:prose-invert">
-            <ProblemStatement description={problem.description} title={problem.title} tags={problem.tags} />
-          </div>
-        </div>
-        <ProblemSubmitBar problem={problem} />
+      <main className="flex-1 py-2 md:py-5 h-screen">
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="h-full"
+        >
+
+          <ResizablePanel defaultSize={50}>
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md  px-6 h-ful">
+              <div className="prose prose-stone dark:prose-invert h-full ">
+                <ProblemStatement description={problem.description} title={problem.title} tags={problem.tags} />
+              </div>
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle className="bg-gray-700 w-2 cursor-col-resize" />
+
+
+          <ResizablePanel defaultSize={50}>
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 h-full">
+              <ProblemSubmitBar problem={problem} />
+            </div>
+          </ResizablePanel>
+
+
+        </ResizablePanelGroup>
       </main>
     </div>
   );
 }
+
 export const dynamic = "force-dynamic";
+
+
