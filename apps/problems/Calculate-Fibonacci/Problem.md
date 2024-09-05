@@ -1,18 +1,18 @@
-# Problem Statement: Calculate Fibonacci Number
+## Problem Statement: Calculate Fibonacci Number
 
-## Objective
+### Objective
 Write a function `calculateFibonacci` that calculates the nth Fibonacci number. A Fibonacci number is a number that appears in the Fibonacci sequence, where each number is the sum of the two preceding ones, starting from 0 and 1.
 
-## Function Signature
+### Function Signature
 `function calculateFibonacci(n)`
 
-## Input
+### Input
 - `n` (int): A non-negative integer to calculate the nth Fibonacci number.
 
-## Output
+### Output
 - Returns the nth Fibonacci number.
 
-## Examples
+### Examples
 - **Input:** `n = 5` 
    - **Output:** `5` 
    - **Explanation:** The 5th Fibonacci number is 5 (0, 1, 1, 2, 3, 5).
