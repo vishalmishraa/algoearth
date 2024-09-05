@@ -220,10 +220,9 @@ async function runCommand(command: string, code: string, language: string, expec
                 return;
             }
 
-            stdout = stdout.trimEnd();
             
 
-            if (expected_output !== stdout) {
+            if (expected_output !== stdout || expected_output + '\n' !== stdout) {
                 console.log(`expected_output: ${expected_output}, stdout: ${stdout}`);
 
                 resolve({

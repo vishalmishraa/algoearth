@@ -28,6 +28,11 @@ redis.on('ready', () => {
 const app = express();
 app.use(express.json());
 
+db.$connect()
+    .then(() => console.log('Connected to the database'))
+    .catch((error) => console.error('Database connection error:', error));
+
+
 
 app.post('/submissions/batch', async (req, res) => {
     try {
