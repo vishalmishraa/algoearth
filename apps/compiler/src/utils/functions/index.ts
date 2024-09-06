@@ -4,7 +4,7 @@ export function getCommnad(language: string) {
 
     switch (language) {
         case 'cpp':
-            command = 'g++ ./box/yourcode.cpp  -o ./box/yourcode && ./box/yourcode';
+            command = 'g++ -std=c++17 ./box/yourcode.cpp  -o ./box/yourcode && ./box/yourcode';
             break;
         case 'python':
             command = 'python3 ./box/yourcode.py';
