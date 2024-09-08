@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
+
+
+import dotenv from "dotenv";
+import path from "path";
 const nextConfig = {
     typescript: {
         ignoreBuildErrors: true
@@ -6,14 +10,9 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true
     },
-    env: {
-        MOUNT_PATH: process.env.MOUNT_PATH,
-        NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-        JWT_SECRET: process.env.JWT_SECRET,
-        DATABASE_URL: process.env.DATABASE_URL,
-        REDIS_URL: process.env.REDIS_URL,
-        JUDGE0_URI: process.env.JUDGE0_URI
-    }
+    env: dotenv.config({
+        path: path.resolve('./config/.env') 
+    }).parsed || {}
 };
 
 export default nextConfig;
