@@ -1,14 +1,16 @@
+"use client"
+
+import { CheckIcon, ChevronRightIcon, LockIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "./ui/table";
-import { CheckIcon, ChevronRightIcon } from "lucide-react";
 
 interface ProblemRowProps {
   id: string;
@@ -17,6 +19,8 @@ interface ProblemRowProps {
   submissionCount: number;
   contestId: string;
   points: number;
+  startTime: Date;
+  endTime: Date;
 }
 
 export const ContestProblemsTable = ({
@@ -26,6 +30,8 @@ export const ContestProblemsTable = ({
     title: string;
     description: string;
     id: string;
+    endTime: Date;
+    startTime: Date;
     problems: {
       problem: {
         id: string;
@@ -75,6 +81,8 @@ export const ContestProblemsTable = ({
                       title={problem.title}
                       difficulty={problem.difficulty}
                       submissionCount={problem.solved}
+                      startTime={contest.startTime}
+                      endTime={contest.endTime}
                     />
                   ))}
                 </TableBody>
@@ -94,12 +102,18 @@ function ProblemRow({
   submissionCount,
   contestId,
   points,
+  startTime,
+  endTime
 }: ProblemRowProps) {
   const difficultyColor = {
     Easy: "text-green-600 dark:text-green-400",
     Medium: "text-yellow-600 dark:text-yellow-400",
     Hard: "text-red-600 dark:text-red-400",
   }[difficulty] || "text-gray-600 dark:text-gray-400";
+  const isActive = startTime.getTime() < Date.now() && endTime.getTime() > Date.now();
+
+
+
 
   return (
     <TableRow className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
@@ -124,12 +138,25 @@ function ProblemRow({
         </div>
       </TableCell>
       <TableCell className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-        <Link href={`/contest/${contestId}/problem/${id}`}>
-          <Button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-            Solve
-            <ChevronRightIcon className="ml-2 -mr-1 h-4 w-4" />
-          </Button>
-        </Link>
+
+        {
+          isActive ? (
+            <Link href={`/contest/${contestId}/problem/${id}`}>
+              <Button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                Solve
+                <ChevronRightIcon className="ml-2 -mr-1 h-4 w-4" />
+              </Button>
+            </Link>
+          ) : (
+            <Button className="inline-flex disabled items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 transition-colors duration-200">
+              Solve
+              <LockIcon className="ml-2 -mr-1 h-4 w-4" />
+            </Button>
+          )
+        }
+
+
+
       </TableCell>
     </TableRow>
   );
