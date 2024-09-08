@@ -1,35 +1,17 @@
 "use client";
-import { useEffect, useState } from "react";
-import { parseClock } from "../lib/time";
-import { Card, CardContent } from "./ui/card";
+import { useContestTime } from "@/hooks/useContestTime";
 import { Clock } from "lucide-react";
+import { Card, CardContent } from "./ui/card";
 
 export const ContestClock = ({ startTime, endTime }: { startTime: Date; endTime: Date }) => {
-  const [currentTime, setCurrentTime] = useState(Date.now());
-  const [isStarted, setIsStarted] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = Date.now();
-      setCurrentTime(now);
-      setIsStarted(now >= startTime.getTime());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [startTime]);
-
-  const timeLeft = isStarted
-    ? Math.max(0, endTime.getTime() - currentTime)
-    : Math.max(0, startTime.getTime() - currentTime);
-
-  const formatTime = (time: number) => {
-    const hours = Math.floor(time / 3600000);
-    const minutes = Math.floor((time % 3600000) / 60000);
-    const seconds = Math.floor((time % 60000) / 1000);
-    return { hours, minutes, seconds };
-  };
-
-  const { hours, minutes, seconds } = formatTime(timeLeft);
+  const {
+    hours,
+    isStarted,
+    minutes,
+    seconds,
+    timeLeft
+  } = useContestTime({ startTime, endTime });
 
   return (
     <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900 dark:to-blue-900 border-2 border-indigo-200 dark:border-indigo-700 shadow-lg">
