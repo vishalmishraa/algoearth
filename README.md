@@ -1,347 +1,326 @@
-# Algoearth : Organize Competitive Programming Contests
+# AlgoEarth: Organize Competitive Programming Contests
 
-This project is based on monolithic architecture with microservices approach and  involves deploying these Four services:  Web app , compiler , sweeper , problem-boilerplate-generator .  
+This project is based on a microservices architecture and involves deploying four main services: Web app, Compiler, Sweeper, and Boilerplate Generator.
 
 ## Architecture
 
 ![Architecture](./architecture.png)
 
-The Architecture represents a CI/CD pipeline and deployment enviroment that utilize several tools and cloud services to manage build : 
+The Architecture represents a CI/CD pipeline and deployment environment that utilizes several tools and cloud services to manage the build and deployment process:
 
-1. Web App , compiler  , sweeper and boilerplate-generator : These services are the core components of the application . each serving diffrent purpose like web service is used to host the web app and manages the user interaction , compiler service is used to compile the code and return the output , sweeper service is used to keep the data realtime like updating the status of the submission and boilerplate-generator is used to generate the boilerplate code for the problem statement.
+1. Web App, Compiler, Sweeper, and Boilerplate Generator: These services are the core components of the application, each serving a different purpose:
+   - Web service: Hosts the web app and manages user interactions
+   - Compiler service: Compiles code and returns the output
+   - Sweeper service: Keeps data real-time by updating submission statuses
+   - Boilerplate Generator: Generates boilerplate code for problem statements
 
-2. Turborepo/monorepo : The project is organized as a monorepo using the TurboRepo tool. This allows us to manage multiple services in a single repository and share code between them.
+2. Turborepo/monorepo: The project is organized as a monorepo using Turborepo, allowing management of multiple services in a single repository and sharing code between them.
 
-3. Node.js : Node.js is used as the runtime environment for these services, enabling Tyepscript execution on the server side.
+3. Node.js: Used as the runtime environment for these services, enabling TypeScript execution on the server-side.
 
-4. GitHub: Source code is managed and versioned in GitHub. Developers commit and push their changes here.
+4. GitHub: Source code is managed and versioned in GitHub.
 
-5. Github Actions : Github Actions is used to automate the CI/CD pipeline. It builds the code, then push it to docker and deploys the services to the Kubernetes cluster.
+5. GitHub Actions: Used to automate the CI/CD pipeline. It builds the code, pushes it to Docker, and deploys the services to the Kubernetes cluster.
 
-6. Docker : Docker is used to containerize the services. Each service is built as a Docker image and pushed to the Docker Hub registry.
+6. Docker: Used to containerize the services. Each service is built as a Docker image and pushed to the Docker Hub registry.
 
-7. Kubernetes : Kubernetes is used to deploy the services. It manages the containers and ensures that the services are running and available.
+7. Kubernetes: Used to deploy and manage the services, ensuring they are running and available.
 
 ## Domain hosted with Cloudflare
 
- - To copnfigure the domain with the kubernetes cluster , we can use cloudflare to manage the DNS and SSL certificates.
+To configure the domain with the Kubernetes cluster, use Cloudflare to manage DNS and SSL certificates:
 
-    - Add the domain to cloudflare and get the cluster external IP address.
+1. Add the domain to Cloudflare and get the cluster external IP address:
+   ```sh
+   kubectl get node -o wide
+   ```
+2. Add the cluster IP address to the Cloudflare DNS settings with an `A` record.
 
-        ```sh
-            kubectl get node -o wide
-        ```
-    - Add the cluster IP address to the cloudflare DNS settings with `A` name
-
-![Architecture](./cloudflare.png)
+![Cloudflare DNS](./cloudflare.png)
 
 ## Monitoring using New Relic
 
- - To monitor the services on the kubernetes cluster , we can use New Relic to monitor the services and get the metrics.
+To monitor the services on the Kubernetes cluster:
 
-    - Create an account on New Relic and get the license key.
-    - Follow the installation step by new-relic to install the new relic agent on the kubernetes cluster.
+1. Create an account on New Relic and get the license key.
+2. Follow New Relic's installation steps to install the agent on the Kubernetes cluster.
 
-![Architecture](./new-relic.png)
+![New Relic Dashboard](./new-relic.png)
 
 ## Deployment Configuration
 
-The project aims to deploy and scale the services like web app , judge0 workers , sweeper and boilerplate-generator on Kubernetes cluster. The deployment is automated using Github actions .
+The project aims to deploy and scale the services on a Kubernetes cluster. The deployment is automated using GitHub Actions.
 
 ### Key Objectives
 
-1. *CI/CD Pipeline*: Automate build, docker push ,  and deployment with Github Actions.
-2. *Kubernetes Deployment*: Use Kubernetes for scalable container orchestration.
-3. *Monitoring*: Setup New-Relic for monitoring the services on entire Kubernetes cluster.
+1. CI/CD Pipeline: Automate build, Docker push, and deployment with GitHub Actions.
+2. Kubernetes Deployment: Use Kubernetes for scalable container orchestration.
+3. Monitoring: Set up New Relic for monitoring services on the entire Kubernetes cluster.
 
 ### Tools
 
-- *Digital Ocean*: Infrastructure management.
-- *Gihub Actions*: CI/CD automation.
-- *Kubernetes (K8s)*: Container orchestration.
-- *New Relic*: Metrics collection and visualization.
+- Digital Ocean: Infrastructure management
+- GitHub Actions: CI/CD automation
+- Kubernetes (K8s): Container orchestration
+- New Relic: Metrics collection and visualization
 
 ### Deployment Architecture
 
-- *Web App*: Port 3000.
-- *Compiler*: Port 2358.
-- *Monitoring*: Using New Relic Monitoring service.
-- *Database*: Postgres Database. Port 5432.
-- *Cache*: Redis Cache. Port 6379.
-- *Extras*: Judge0 workers with Autoscaling , Problem Testcases mounted to Judge0 workers and Web App simultaneously.
+- Web App: Port 3000
+- Compiler Service: Port 3005
+- Worker Compiler: Processes compilation jobs
+- Database: PostgreSQL, Port 5432
+- Cache: Redis, Port 6379
+- Extras: Problem Testcases mounted to Compiler Service and Web App simultaneously
 
-This setup ensures a robust, scalable, and efficient deployment of the algoearth services.
+## Compiler Service
 
-The deployment process is automated using Docker , Kubernetes and Github Actions. Below are the detailed steps and configurations required for each part of the process.
+The Compiler Service is a custom-built solution that handles code compilation and execution. It consists of two main components:
 
-## Local Development Setup (Recommended: Dokcer)
+1. Compiler Service (Port 3005): Receives compilation requests and queues them for processing.
+2. Worker Compiler: Processes the queued compilation jobs.
 
-This application need postgres and redis as database and cache respectively. You can use docker to run these services locally. This deployment is largely local machine based with pipelines running on the local machine through Docker .
+### Compiler Service Features
 
+- Accepts code submissions from the Web App
+- Queues compilation jobs using Redis
+- Supports multiple programming languages
+- Handles batch submissions for multiple test cases
 
+### Worker Compiler Features
 
-### 1.  Clone the Repository into local system
+- Pulls compilation jobs from the Redis queue
+- Executes code in a sandboxed environment
+- Measures execution time and memory usage
+- Updates submission status in the database
 
-Here are the steps -
-Install git and clone the repository into the local system. As this is a node application, install node.js and npm 
+### Code Execution Flow
 
-### Install Dependencies
+1. User submits code through the Web App
+2. Web App sends the submission to the Compiler Service
+3. Compiler Service queues the job in Redis
+4. Worker Compiler picks up the job from the queue
+5. Worker Compiler executes the code and collects results
+6. Results are stored in the database and Redis
+7. Web App retrieves and displays the results to the user
 
-    command: npm install
+For implementation details, refer to:
 
-This will install all the dependencies to run the backend.
+## Local Development Setup (Recommended: Docker)
 
-### 2. Configure Environment Variables
+This application needs PostgreSQL and Redis as database and cache, respectively. You can use Docker to run these services locally.
 
-- Copy .env.example to a .env file in `aaps/web` , `aaps/boilerplate-generator` and `packages/db`
+### 1. Clone the Repository
 
-    - app/web
-        ```sh
-        MOUNT_PATH=/apps/problems
-        NEXTAUTH_SECRET=secret
-        JWT_SECRET=secret
-        DATABASE_URL=postgresql://postgres:supersecurepassword@localhost:5432/algoearth?schema=public
-        REDIS_URL=redis://:supersecurepassword@localhost:6379
-        JUDGE0_URI=https://localhost:2358
-        ```
-    - app/boilerplate-generator
-        ```sh
-        PROBLEMS_DIR_PATH=/apps/problems
-        ```
-    - packages/db
-        ```sh
-        DATABASE_URL=postgresql://postgres:supersecurepassword@localhost:5432/algoearth?schema=public
-        MOUNT_PATH=../../apps/problems
-        ```
-We use port 3000 to run Web App
+Install git and clone the repository into your local system. As this is a Node.js application, install Node.js and npm.
 
-### 3. Configure Postgres and Redis
-
-- Run the following commands to start the Postgres and Redis services:
-
-    ```sh
-    docker run --name postgres -e POSTGRES_PASSWORD=supersecurepassword -p 5432:5432 -d postgres
-    
-    ```
-
-    ```sh
-    docker run --name redis -e REDIS_PASSWORD=supersecurepassword -p 6379:6379 -d redis
-    ```
-### 4. System Configration to run Judge0 using Docker on Local machine
--   As judge0 require `cgroup ` v1 to run , but by default in system cgroup v2 is enabled. So we need to change it to cgroup v1.
-    -  Run the following commands to change the cgroup version to v1:
-        ```sh
-        vim ~/Library/Group\ Containers/group.com.docker/settings.json
-        # append "deprecatedCgroupv1": true
-        ```
-
-### 5. Setup Judge0 on Local Machine using docker compose 
- - Run the following commands to setup Judge0 on local machine:
-    ```sh
-        docker compose up
-        #docker compose file is present in the root directory of the project it will also start the judge0 workers , postgres and redis
-    ```
-### 6. Run the services
- - Run the following commands to start the services:
-    ```sh
-        npm run dev
-        #this will start the web app and boilerplate-generator
-    ```
-
-## Deployment using kubernetes (Recommended: Digital Ocean K8s)
-
-### -  Requirements 
- - `kubectl` : Install kubectl to interact with the Kubernetes cluster.
- - `helm` : Install helm to manage the Kubernetes applications.   
- - Generate a DigitalOcean k8s cluster and get the kubeconfig file to interact with the cluster.
-
-
-###  **Cluster configuration**
-
-`Change cgroup Version to v1 in all nodes (can be done efficiently using Ansible)`
-
-Judge0 requires cgroup v1 to run. By default, the cluster uses cgroup v2. Follow these steps to change it:
-
-1. SSH into each node and run the following commands:
-
-    ```sh
-    sudo nano /etc/default/grub
-    ```
-
-    Add the following line at the top or edit it if it exists:
-
-    ```sh
-    GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=0"
-    ```
-
-    Then update GRUB and reboot:
-
-    ```sh
-    sudo update-grub
-    sudo reboot
-    ```
-
-2. Check the cgroup version:
-
-    ```sh
-    stat -fc %T /sys/fs/cgroup/
-    ```
-
-    - For cgroup v2, the output is `cgroup2fs`.
-    - For cgroup v1, the output is `tmpfs`.
-
-3. Apply these changes on all nodes. (This can be efficiently done using Ansible.)
-
-### 1.  Apply the Kubernetes configuration with ConfigMap
-
-1. **Create a ConfigMap for the environment variables:**
-
-    ```sh
-    kubectl apply -f ./k8s/0-configmap/configmap.yml
-    ```
-
-    **Note:** Update to the configmap after Deployment of `Postgres and Redis` .
-
-### 2. Mount Problems to shared PVC
-
-####  **Web App , Judge0 server and workers require `add-problems`. Follow these steps to deploy it:**
-
-1. **Add NFS-based PVC for ReadWriteMany support:**
-
-    Add the stable Helm repository:
-
-    ```sh
-    helm repo add stable https://charts.helm.sh/stable
-    ```
-
-    Update the Helm repository:
-
-    ```sh
-    helm repo update
-    ```
-
-    Install the NFS server provisioner:
-
-    ```sh
-    helm install nfs-server-provisioner stable/nfs-server-provisioner
-    ```
-
-2. **Apply the storage class:**
-
-    ```sh
-    kubectl apply -f ./k8s/1-mount-problems/nfs-storageclass.yml
-    ```
-
-3. **Apply PersistentVolume (PV) and PersistentVolumeClaim (PVC) for `problems`:**
-
-    ```sh
-    kubectl apply -f ./k8s/1-mount-problems/problems-pv-pvc.yml
-    ```
-
-4. **Deploy add-problems:**
-
-    This will add all the problems to the shared PVC:
-
-    ```sh
-    kubectl apply -f ./k8s/1-mount-problems/add-problem-deployment.yml
-    ```
-
-By following these steps, you will have `problems-pvc` pvc class that can be used by judge0 to acess test cases on your Kubernetes cluster.
-
-### 3. Deploy Postgres and Redis
-
-####  **Deploy Postgres and Redis:**
-
-    kubectl apply -f ./k8s/2-postgres-redis/db.yml    
-
-
-### Note: Update the ConfigMap with the Postgres and Redis ClusterIPs.
-
- - To get clusterIPs of Postgres and Redis
-
-    ```sh
-    kubectl get svc
-    ```
-
-### 4. Deploy Judge0
-
-####  **Deploy Judge0:**
-
-    kubectl apply -f ./k8s/3-judge0/judge0.yml
-
-### 5. Deploy  sweeper
-
-  - To Deploy Sweeper , first set Secret Key for the DATABASE_URL
-    
-    `NOTE: update the DATABASE_URL in the secret.yml file`
-    
-    ```sh
-    kubectl apply -f ./k8s/4-sweeper
-    ```
-  - Deploy the sweeper Deployment
-
-    ```sh
-    kubectl apply -f ./k8s/4-sweeper/deployment.yml
-    ```  
-
-### 6. Deploy Web App
- - To Deploy Web App , first set Secret Key , configmap 
-    
-    `NOTE: update the secret.yml file`
-
-    - configmap.yml
-
-        ```sh
-        kubectl apply -f ./k8s/5-web/configmap.yml
-        ```
-    - secret.yml
-
-        ```sh
-        kubectl apply -f ./k8s/5-web/secret.yml
-        ```
-    - Deploy the Web App Deployment
-
-        ```sh
-        kubectl apply -f ./k8s/5-web/deployment.yml
-        ```
-    - Deploy the Web App Service
-
-        ```sh
-        kubectl apply -f ./k8s/5-web/services.yml
-        ```
-
-### 7. Horigentel POD Auto Scaler for judge0-worker
-
-- To scale the judge0-worker pods based on the CPU usage , we can use Horizontal Pod Autoscaler (HPA) in kubernetes.
-
-        kubectl apply -f ./k8s/HPA/HPA-judge0.yml
-        
-
-### 8. Apply nginx ingress controller
- - To use nginx ingress first we have to install it to the kube-system  using helm 
-
-    ```sh
-    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-    ```
-    ```sh
-    helm repo update
-    ```
-    ```sh
-    helm install nginx-ingress ingress-nginx/ingress-nginx
-    ```
- - Apply the ingress rules for the web app
-
-    ```sh
-    kubectl apply -f ./k8s/LAST/ingress-judge-0.yml
-    ```
+### 2. Install Dependencies
+
+```sh
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Copy `.env.example` to `.env` file in `apps/web`, `apps/compiler`, `apps/worker-compiler`, `apps/boilerplate-generator`, and `packages/db`. Update the variables as needed.
+
+### 4. Configure PostgreSQL and Redis
+
+Run the following commands to start the PostgreSQL and Redis services:
+
+```sh
+docker run --name postgres -e POSTGRES_PASSWORD=supersecurepassword -p 5432:5432 -d postgres
+docker run --name redis -e REDIS_PASSWORD=supersecurepassword -p 6379:6379 -d redis
+```
+
+### 5. Run the services
+
+```sh
+npm run dev
+```
+
+This will start all the services, including the web app, compiler service, worker compiler, and boilerplate generator.
+
+### 6. Access the Application
+
+Open your browser and navigate to `http://localhost:3000` to access the web application.
+
+## Deployment using Kubernetes 
+
+### Requirements
+
+- `kubectl`: Install kubectl to interact with the Kubernetes cluster.
+- `helm`: Install Helm to manage Kubernetes applications.
+- A Kubernetes cluster (e.g., DigitalOcean Kubernetes)
+- Docker Hub account for storing container images
+
+### Deployment Steps
+
+1. **Prepare the Kubernetes Cluster**
+   - Create a Kubernetes cluster on your chosen provider (e.g., DigitalOcean)
+   - Configure `kubectl` to use your cluster's context
+
+2. **Set up Persistent Volume for Problems**
+   - Apply the PersistentVolumeClaim:
+     ```sh
+     kubectl apply -f k8s/1-mount-problems/pvc.yml
+     ```
+   - Deploy the problems:
+     ```sh
+     kubectl apply -f k8s/1-mount-problems/deployment.yml
+     ```
+
+3. **Deploy PostgreSQL and Redis**
+   - Apply the database configurations:
+     ```sh
+     kubectl apply -f k8s/2-postgres-redis/db.yml
+     ```
+
+4. **Deploy Compiler Service**
+   - Create the necessary secrets:
+     ```sh
+     kubectl create secret generic algoearth-compiler-secret --from-literal=DATABASE_URL=your_database_url --from-literal=REDIS_URL=your_redis_url
+     ```
+   - Deploy the compiler service:
+     ```sh
+     kubectl apply -f k8s/3-compiler/deployment.yml
+     kubectl apply -f k8s/3-compiler/service.yml
+     ```
+
+5. **Deploy Worker Compiler**
+   - Create the necessary secrets:
+     ```sh
+     kubectl create secret generic algoearth-wc --from-literal=DATABASE_URL=your_database_url --from-literal=REDIS_URL=your_redis_url
+     ```
+   - Deploy the worker compiler:
+     ```sh
+     kubectl apply -f k8s/4-worker-compiler/deployment.yml
+     ```
+
+6. **Deploy Sweeper Service**
+   - Create the necessary secrets:
+     ```sh
+     kubectl create secret generic algoearth-sw --from-literal=DATABASE_URL=your_database_url
+     ```
+   - Deploy the sweeper service:
+     ```sh
+     kubectl apply -f k8s/5-sweeper/deployment.yml
+     ```
+
+7. **Deploy Web Application**
+   - Create the necessary secrets and config map:
+     ```sh
+     kubectl create secret generic algoearth-web-secret --from-literal=DATABASE_URL=your_database_url --from-literal=NEXTAUTH_SECRET=your_nextauth_secret --from-literal=REDIS_URL=your_redis_url --from-literal=CLOUD_FLARE_TURNSTILE_SITE_KEY=your_site_key --from-literal=CLOUD_FLARE_TURNSTILE_SECRET_KEY=your_secret_key
+     kubectl apply -f k8s/6-web/configmap.yml
+     ```
+   - Deploy the web application:
+     ```sh
+     kubectl apply -f k8s/6-web/deployment.yml
+     kubectl apply -f k8s/6-web/service.yml
+     ```
+
+8. **Configure Ingress (if needed)**
+   - If using an Ingress controller, apply your Ingress configuration:
+     ```sh
+     kubectl apply -f k8s/ingress.yml
+     ```
+
+9. **Verify Deployments**
+   - Check the status of all deployments:
+     ```sh
+     kubectl get deployments
+     kubectl get pods
+     kubectl get services
+     ```
+
+### Scaling and Maintenance
+
+- To scale a service, use:
+  ```sh
+  kubectl scale deployment <deployment-name> --replicas=<number>
+  ```
+- For the worker-compiler, you might want to set up Horizontal Pod Autoscaling:
+  ```sh
+  kubectl autoscale deployment worker-compiler --cpu-percent=50 --min=1 --max=10
+  ```
+
+### Monitoring and Logging
+
+- Use Kubernetes dashboard or a monitoring solution like Prometheus and Grafana for detailed insights.
+- For logs, use:
+  ```sh
+  kubectl logs <pod-name>
+  ```
+
+### Updating Deployments
+
+When you need to update any service:
+
+1. Build and push the new Docker image to Docker Hub.
+2. Update the deployment with the new image:
+   ```sh
+   kubectl set image deployment/<deployment-name> <container-name>=<new-image>:<tag>
+   ```
+
+Remember to replace placeholders like `your_database_url`, `your_redis_url`, etc., with your actual configuration values.
+
+This deployment process sets up all the components of AlgoEarth on a Kubernetes cluster, ensuring scalability and ease of management.
 
 ## Conclusion
 
-This project aims to deploy the services on the kubernetes cluster and monitor the services using New Relic. The deployment is automated using Github Actions and the services are deployed on the Digital Ocean Kubernetes cluster. The services are scalable and efficient, ensuring a robust deployment of the algoearth services.
+AlgoEarth is a robust, scalable platform for organizing competitive programming contests, built on a microservices architecture. The project leverages modern cloud technologies and DevOps practices to ensure high availability, scalability, and ease of management. Key achievements include:
 
-## Next Step
+1. Microservices Architecture: Separate services for web, compilation, worker processing, and data sweeping, allowing for independent scaling and maintenance.
+2. Kubernetes Deployment: Utilizing container orchestration for efficient resource management and service scaling.
+3. CI/CD Pipeline: Automated build and deployment processes using GitHub Actions, enhancing development velocity.
+4. Custom Compiler Service: A tailored solution for code compilation and execution, replacing the need for external services like Judge0.
+5. Persistent Storage: Efficient handling of problem sets and test cases across services.
+6. Monitoring and Logging: Integration with New Relic for comprehensive system insights.
 
-- Add more services to the deployment.
-- Improve the CI/CD pipeline.
-- Optimize the deployment for better performance.
+This architecture demonstrates the power of cloud-native technologies in creating a flexible, maintainable, and scalable competitive programming platform.
 
+## Next Steps
+
+To further enhance AlgoEarth and expand its capabilities, consider the following next steps:
+
+1. Performance Optimization:
+   - Implement caching strategies to reduce database load.
+   - Optimize database queries and indexes for faster data retrieval.
+
+2. Security Enhancements:
+   - Conduct a thorough security audit of the entire system.
+   - Implement additional security measures like rate limiting and enhanced input validation.
+
+3. Feature Expansion:
+   - Develop a real-time collaboration feature for team contests.
+   - Implement an AI-powered hint system for problem-solving assistance.
+
+4. Scalability Improvements:
+   - Implement database sharding for handling larger datasets.
+   - Explore serverless computing options for certain microservices.
+
+5. User Experience:
+   - Develop a mobile app for on-the-go coding practice.
+   - Implement a recommendation system for personalized problem suggestions.
+
+6. Community Building:
+   - Integrate a forum or discussion board for user interactions.
+   - Develop a content creation platform for users to contribute problems.
+
+7. Analytics and Reporting:
+   - Implement advanced analytics for contest organizers and participants.
+   - Develop a comprehensive reporting system for user progress tracking.
+
+8. Internationalization:
+   - Add multi-language support for a global user base.
+   - Implement region-specific leaderboards and contests.
+
+9. Integration and Partnerships:
+   - Explore integrations with popular IDEs and code editors.
+   - Seek partnerships with educational institutions for wider adoption.
+
+10. Infrastructure Optimization:
+    - Implement auto-scaling policies based on usage patterns.
+    - Explore multi-region deployment for improved global performance.
+
+By focusing on these areas, AlgoEarth can continue to evolve, providing an even more powerful and user-friendly platform for competitive programming enthusiasts worldwide.
