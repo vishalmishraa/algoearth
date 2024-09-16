@@ -145,112 +145,132 @@ This will start all the services, including the web app, compiler service, worke
 
 Open your browser and navigate to `http://localhost:3000` to access the web application.
 
-## Deployment using Kubernetes 
+## Deployment using Kubernetes
 
-### Requirements
+There are two methods to deploy AlgoEarth on Kubernetes: manually or using a deployment script. Both methods are outlined below.
 
-- `kubectl`: Install kubectl to interact with the Kubernetes cluster.
-- `helm`: Install Helm to manage Kubernetes applications.
-- A Kubernetes cluster (e.g., DigitalOcean Kubernetes)
-- Docker Hub account for storing container images
+### Prerequisites
 
-### Deployment Steps
+- A Kubernetes cluster (e.g., DigitalOcean Kubernetes, GKE, EKS, or Minikube for local testing)
+- `kubectl` installed and configured to interact with your cluster
+- `helm` installed (version 3.x or later)
+- Docker Hub account (or any other container registry)
 
-1. **Prepare the Kubernetes Cluster**
-   - Create a Kubernetes cluster on your chosen provider (e.g., DigitalOcean)
-   - Configure `kubectl` to use your cluster's context
+### Method 1: Manual Deployment
 
-2. **Set up Persistent Volume for Problems**
-   - Apply the PersistentVolumeClaim:
-     ```sh
-     kubectl apply -f k8s/1-mount-problems/pvc.yml
-     ```
-   - Deploy the problems:
-     ```sh
-     kubectl apply -f k8s/1-mount-problems/deployment.yml
-     ```
+1. **Clone the Repository**
+   ```sh
+   git clone https://github.com/your-username/algoearth.git
+   cd algoearth
+   ```
 
-3. **Deploy PostgreSQL and Redis**
-   - Apply the database configurations:
-     ```sh
-     kubectl apply -f k8s/2-postgres-redis/db.yml
-     ```
+2. **Update Configuration Files**
+   
+   Edit the following files to match your environment:
 
-4. **Deploy Compiler Service**
-   - Create the necessary secrets:
-     ```sh
-     kubectl create secret generic algoearth-compiler-secret --from-literal=DATABASE_URL=your_database_url --from-literal=REDIS_URL=your_redis_url
-     ```
-   - Deploy the compiler service:
-     ```sh
-     kubectl apply -f k8s/3-compiler/deployment.yml
-     kubectl apply -f k8s/3-compiler/service.yml
-     ```
+   - `k8s/manifest.yml`: Update the `host` field under the Ingress resource to your domain.
+   - `k8s/secret.yml`: Update the base64 encoded `.env` content with your actual environment variables.
+   - `k8s/0-config-map/config.yml`: Update database and Redis passwords if needed.
+   - `k8s/3-compiler/configmap.yml` and `k8s/4-worker-compiler/configmap.yml`: Update database and Redis URLs.
+   - `k8s/5-sweeper/configmap.yml`: Update the database URL.
 
-5. **Deploy Worker Compiler**
-   - Create the necessary secrets:
-     ```sh
-     kubectl create secret generic algoearth-wc --from-literal=DATABASE_URL=your_database_url --from-literal=REDIS_URL=your_redis_url
-     ```
-   - Deploy the worker compiler:
-     ```sh
-     kubectl apply -f k8s/4-worker-compiler/deployment.yml
-     ```
+3. **Deploy Longhorn (for storage)**
+   ```sh
+   helm repo add longhorn https://charts.longhorn.io
+   helm repo update
+   helm install longhorn longhorn/longhorn --namespace longhorn-system --create-namespace
+   ```
 
-6. **Deploy Sweeper Service**
-   - Create the necessary secrets:
-     ```sh
-     kubectl create secret generic algoearth-sw --from-literal=DATABASE_URL=your_database_url
-     ```
-   - Deploy the sweeper service:
-     ```sh
-     kubectl apply -f k8s/5-sweeper/deployment.yml
-     ```
+4. **Apply Secrets and ConfigMaps**
+   ```sh
+   kubectl apply -f k8s/secret.yml
+   kubectl apply -f k8s/0-config-map/config.yml
+   kubectl apply -f k8s/3-compiler/configmap.yml
+   kubectl apply -f k8s/4-worker-compiler/configmap.yml
+   kubectl apply -f k8s/5-sweeper/configmap.yml
+   ```
 
-7. **Deploy Web Application**
-   - Create the necessary secrets and config map:
-     ```sh
-     kubectl create secret generic algoearth-web-secret --from-literal=DATABASE_URL=your_database_url --from-literal=NEXTAUTH_SECRET=your_nextauth_secret --from-literal=REDIS_URL=your_redis_url --from-literal=CLOUD_FLARE_TURNSTILE_SITE_KEY=your_site_key --from-literal=CLOUD_FLARE_TURNSTILE_SECRET_KEY=your_secret_key
-     kubectl apply -f k8s/6-web/configmap.yml
-     ```
-   - Deploy the web application:
-     ```sh
-     kubectl apply -f k8s/6-web/deployment.yml
-     kubectl apply -f k8s/6-web/service.yml
-     ```
+5. **Deploy NGINX Ingress Controller**
+   ```sh
+   helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+   helm repo update
+   helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
+   ```
 
-8. **Configure Ingress (if needed)**
-   - If using an Ingress controller, apply your Ingress configuration:
-     ```sh
-     kubectl apply -f k8s/ingress.yml
-     ```
+6. **Deploy AlgoEarth Components**
+   ```sh
+   kubectl apply -f k8s/1-mount-problems/pvc.yml
+   kubectl apply -f k8s/1-mount-problems/deployment.yml
+   kubectl apply -f k8s/2-postgres-redis/db.yml
+   kubectl apply -f k8s/3-compiler/deployment.yml
+   kubectl apply -f k8s/3-compiler/service.yml
+   kubectl apply -f k8s/4-worker-compiler/deployment.yml
+   kubectl apply -f k8s/5-sweeper/deployment.yml
+   kubectl apply -f k8s/5-web/deployment.yml
+   kubectl apply -f k8s/5-web/service.yml
+   kubectl apply -f k8s/LAST/ingress-judge-0.yml
+   ```
 
-9. **Verify Deployments**
-   - Check the status of all deployments:
-     ```sh
-     kubectl get deployments
-     kubectl get pods
-     kubectl get services
-     ```
+7. **Verify Deployments**
+   ```sh
+   kubectl get deployments
+   kubectl get pods
+   kubectl get services
+   ```
 
-### Scaling and Maintenance
+### Method 2: Deployment Using Script
 
-- To scale a service, use:
-  ```sh
-  kubectl scale deployment <deployment-name> --replicas=<number>
-  ```
-- For the worker-compiler, you might want to set up Horizontal Pod Autoscaling:
-  ```sh
-  kubectl autoscale deployment worker-compiler --cpu-percent=50 --min=1 --max=10
-  ```
+1. **Clone the Repository**
+   ```sh
+   git clone https://github.com/your-username/algoearth.git
+   cd algoearth
+   ```
 
-### Monitoring and Logging
+2. **Update Configuration Files**
+   
+   Follow step 2 from the manual deployment method to update necessary configuration files.
 
-- Use Kubernetes dashboard or a monitoring solution like Prometheus and Grafana for detailed insights.
-- For logs, use:
-  ```sh
-  kubectl logs <pod-name>
-  ```
+3. **Run the Deployment Script**
+   ```sh
+   chmod +x k8s/deploy.sh
+   ./k8s/deploy.sh
+   ```
+
+   This script will:
+   - Install Longhorn for persistent storage
+   - Apply secrets and config maps
+   - Install NGINX Ingress Controller
+   - Deploy all components of AlgoEarth
+
+4. **Verify Deployments**
+   ```sh
+   kubectl get deployments
+   kubectl get pods
+   kubectl get services
+   ```
+
+### Seeding the Database
+
+After deployment, you need to seed the database with initial data:
+
+1. **Get the Web Application Pod Name**
+   ```sh
+   POD_NAME=$(kubectl get pods -l app=algoearth -o jsonpath="{.items[0].metadata.name}")
+   ```
+
+2. **Execute the Seed Command**
+   ```sh
+   kubectl exec -it $POD_NAME -- npx prisma db seed
+   ```
+
+### Setting up DNS
+
+1. Get the external IP of your NGINX Ingress Controller:
+   ```sh
+   kubectl get services ingress-nginx-controller -n ingress-nginx
+   ```
+
+2. Create an A record in your DNS provider's dashboard, pointing your domain to this IP address.
 
 ### Updating Deployments
 
@@ -262,9 +282,15 @@ When you need to update any service:
    kubectl set image deployment/<deployment-name> <container-name>=<new-image>:<tag>
    ```
 
-Remember to replace placeholders like `your_database_url`, `your_redis_url`, etc., with your actual configuration values.
+### Monitoring and Logging
 
-This deployment process sets up all the components of AlgoEarth on a Kubernetes cluster, ensuring scalability and ease of management.
+- Use Kubernetes dashboard or a monitoring solution like Prometheus and Grafana for detailed insights.
+- For logs, use:
+  ```sh
+  kubectl logs <pod-name>
+  ```
+
+Remember to replace placeholders like `your-username`, `your-domain`, etc., with your actual values throughout the deployment process.
 
 ## Conclusion
 
