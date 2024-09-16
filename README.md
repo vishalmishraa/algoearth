@@ -251,18 +251,29 @@ There are two methods to deploy AlgoEarth on Kubernetes: manually or using a dep
 
 ### Seeding the Database
 
-After deployment, you need to seed the database with initial data:
+After deployment, you need to seed the database with initial data. Follow these steps:
 
-1. **Get the Web Application Pod Name**
+1. Generate boilerplate for problems:
    ```sh
-   POD_NAME=$(kubectl get pods -l app=algoearth -o jsonpath="{.items[0].metadata.name}")
+   cd apps/boilerplate
+   npm run boiler:generate
    ```
 
-2. **Execute the Seed Command**
+2. Set up the database connection:
    ```sh
-   kubectl exec -it $POD_NAME -- npx prisma db seed
+   cd packages/db
+   # Create .env file and add DATABASE_URL
+   echo "DATABASE_URL=your_database_url_here" > .env
    ```
 
+3. Initialize and seed the database:
+   ```sh
+   npx prisma generate
+   npx prisma db push
+   npx prisma seed
+   ```
+
+**Note:** The web app will only function correctly after completing these steps.
 ### Setting up DNS
 
 1. Get the external IP of your NGINX Ingress Controller:
