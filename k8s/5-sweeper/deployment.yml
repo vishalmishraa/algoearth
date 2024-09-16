@@ -18,6 +18,6 @@ spec:
           env:
             - name: DATABASE_URL
               valueFrom:
-                secretKeyRef:
-                  name: algoearth-sw
+                configMapKeyRef:
+                  name: algoearth-sweeper-config
                   key: DATABASE_URL

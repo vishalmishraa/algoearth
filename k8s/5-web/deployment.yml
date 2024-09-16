@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: algoearth
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: algoearth
+  template:
+    metadata:
+      labels:
+        app: algoearth
+    spec:
+      containers:
+      - name: main-container
+        image: vishal022/algoearth-web:latest
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: problems
+          mountPath: /dev/problems
+        - name: env-files
+          mountPath: /usr/src/app/apps/web/config
+      volumes:
+      - name: problems
+        persistentVolumeClaim:
+          claimName: problems-pvc
+      - name: env-files
+        secret:
+          secretName: algoearth-web-secret
+---

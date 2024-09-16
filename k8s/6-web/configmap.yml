@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: algoearth-web-config
-data:
-  MOUNT_PATH: /dev/problems
-  NEXTAUTH_URL: https://algoearth.vishalmishra.tech
-  NODE_ENV : production

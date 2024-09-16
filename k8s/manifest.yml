@@ -1,0 +1,424 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: judge0-config
+  namespace: default
+data:
+  REDIS_PASSWORD: "supersecurepassword"
+  POSTGRES_DB: "algoearth"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "supersecurepassword"
+  POSTGRES_HOST: "postgres.default.svc.cluster.local"
+  REDIS_HOST: "redis.default.svc.cluster.local"
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn
+provisioner: driver.longhorn.io
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+volumeBindingMode: Immediate 
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: problems-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn
+  hostPath:
+    path: /mnt/data/
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: problems-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: longhorn
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: add-problems
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: add-problems
+  template:
+    metadata:
+      labels:
+        app: add-problems
+    spec:
+      initContainers:
+      - name: copy-problems
+        image: vishal022/algoearth-problems:latest
+        command: ['sh', '-c', 'if [ "$(ls -A /dev/problems)" ]; then rm -rf /dev/problems/*; fi && cp -r /usr/src/app/apps/problems/* /dev/problems']
+        volumeMounts:
+        - name: problems
+          mountPath: /dev/problems 
+      containers:
+      - name: main-container
+        image: busybox
+        command: ['sh', '-c', 'sleep infinity']
+        volumeMounts:
+        - name: problems
+          mountPath: /dev/problems
+      volumes:
+      - name: problems
+        persistentVolumeClaim:
+          claimName: problems-pvc
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/postgres
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      initContainers:
+      - name: clean-data-dir
+        image: busybox
+        command: ['sh', '-c', 'rm -rf /var/lib/postgresql/data/pgdata/* && rm -rf /var/lib/postgresql/data/pgdata/.* || true']
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data/pgdata
+      containers:
+      - name: postgres
+        image: postgres:alpine
+        envFrom:
+        - configMapRef:
+            name: judge0-config
+        env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data/pgdata
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
+          limits:
+            cpu: "500m"
+            memory: "500Mi"
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: default
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+      nodePort: 30007
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.2.4
+          command: ["bash", "-c", 'docker-entrypoint.sh --appendonly no --requirepass "$REDIS_PASSWORD"']
+          envFrom:
+            - configMapRef:
+                name: judge0-config
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "200Mi"
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: default
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: algoearth-c-config
+data:
+  DATABASE_URL: "postgresql://postgres:supersecurepassword@postgres-service.default.svc.cluster.local:5432/algoearth?schema=public"
+  REDIS_URL: "redis://:supersecurepassword@redis-service.default.svc.cluster.local:6379" 
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: compiler
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: compiler
+  template:
+    metadata:
+      labels:
+        app: compiler
+    spec:
+      containers:
+      - name: main-container
+        image: vishal022/algoearth-compiler:latest
+        ports:
+          - containerPort: 3005
+        volumeMounts:
+        - name: problems
+          mountPath: /dev/problems
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: algoearth-c-config
+                key: DATABASE_URL
+          - name: REDIS_URL
+            valueFrom:
+              configMapKeyRef:
+                name: algoearth-c-config
+                key: REDIS_URL
+      volumes:
+      - name: problems
+        persistentVolumeClaim:
+          claimName: problems-pvc 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: algoearth-compiler-service
+  namespace: default
+spec:
+  selector:
+    app: compiler
+  ports:
+    - protocol: TCP
+      port: 3005
+      targetPort: 3005
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-compiler
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: worker-compiler
+  template:
+    metadata:
+      labels:
+        app: worker-compiler
+    spec:
+      containers:
+        - name: worker-compiler
+          image: vishal022/algoearth-worker-compiler:latest
+          volumeMounts:
+          - name: problems
+            mountPath: /dev/problems
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: algoearth-c-config
+                  key: DATABASE_URL
+            - name: REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: algoearth-c-config
+                  key: REDIS_URL
+      volumes:
+      - name: problems
+        persistentVolumeClaim:
+          claimName: problems-pvc 
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: algoearth-sweeper-config
+data:
+  DATABASE_URL: "postgresql://postgres:supersecurepassword@postgres-service.default.svc.cluster.local:5432/algoearth?schema=public"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sweeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sweeper
+  template:
+    metadata:
+      labels:
+        app: sweeper
+    spec:
+      containers:
+        - name: sweeper
+          image: vishal022/algoearth-sweeper:latest
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: algoearth-sweeper-config
+                  key: DATABASE_URL
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: algoearth
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: algoearth
+  template:
+    metadata:
+      labels:
+        app: algoearth
+    spec:
+      containers:
+      - name: main-container
+        image: vishal022/algoearth-web:latest
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: problems
+          mountPath: /dev/problems
+        - name: env-files
+          mountPath: /usr/src/app/apps/web/config
+      volumes:
+      - name: problems
+        persistentVolumeClaim:
+          claimName: problems-pvc
+      - name: env-files
+        secret:
+          secretName: algoearth-web-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: algoearth-web-service
+  namespace: default
+spec:
+  selector:
+    app: algoearth
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: judge0-ingress
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: algoearth1.vishalmishra.tech
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: algoearth-web-service
+            port:
+              number: 3000

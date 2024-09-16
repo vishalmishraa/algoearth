@@ -1,29 +1,4 @@
 
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-pv
-  namespace: default
-spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/data/postgres
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pvc
-  namespace: default
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
 
 ---
 
@@ -45,10 +20,10 @@ spec:
       initContainers:
       - name: clean-data-dir
         image: busybox
-        command: ['sh', '-c', 'rm -rf /var/lib/postgresql/data/pgdata2/* && rm -rf /var/lib/postgresql/data/pgdata2/.* || true']
+        command: ['sh', '-c', 'rm -rf /var/lib/postgresql/data/pgdata/* && rm -rf /var/lib/postgresql/data/pgdata/.* || true']
         volumeMounts:
         - name: postgres-storage
-          mountPath: /var/lib/postgresql/data/pgdata2
+          mountPath: /var/lib/postgresql/data/pgdata
       containers:
       - name: postgres
         image: postgres:alpine
@@ -57,10 +32,10 @@ spec:
             name: judge0-config
         env:
         - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata2
+          value: /var/lib/postgresql/data/pgdata
         volumeMounts:
         - name: postgres-storage
-          mountPath: /var/lib/postgresql/data/pgdata2
+          mountPath: /var/lib/postgresql/data/pgdata
         resources:
           requests:
             cpu: "100m"
@@ -87,7 +62,8 @@ spec:
     - protocol: TCP
       port: 5432
       targetPort: 5432
-  type: LoadBalancer
+      nodePort: 30007
+  type: NodePort
 
 ---
 apiVersion: apps/v1

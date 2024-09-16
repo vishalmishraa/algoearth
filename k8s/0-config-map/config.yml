@@ -10,11 +10,3 @@ data:
   POSTGRES_PASSWORD: "supersecurepassword"
   POSTGRES_HOST: "postgres.default.svc.cluster.local"
   REDIS_HOST: "redis.default.svc.cluster.local"
-  judge0.conf: |
-    DB_URL=postgresql://postgres:supersecurepassword@ "<check svc cluster port>"/judge0
-    REDIS_URL=redis://:supersecurepassword@ "<check svc cluster port>"/0
-    WORKERS=1kyu
-    REDIS_PASSWORD=supersecurepassword
-    POSTGRES_DB=algoearth
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=supersecurepassword

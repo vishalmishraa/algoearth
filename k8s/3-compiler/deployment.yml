@@ -24,13 +24,13 @@ spec:
         env:
           - name: DATABASE_URL
             valueFrom:
-              secretKeyRef:
-                name: algoearth-compiler-secret
+              configMapKeyRef:
+                name: algoearth-c-config
                 key: DATABASE_URL
           - name: REDIS_URL
             valueFrom:
-              secretKeyRef:
-                name: algoearth-compiler-secret
+              configMapKeyRef:
+                name: algoearth-c-config
                 key: REDIS_URL
       volumes:
       - name: problems

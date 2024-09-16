@@ -16,20 +16,24 @@ spec:
       initContainers:
       - name: copy-problems
         image: vishal022/algoearth-problems:latest
-        command: ['sh', '-c', 'cp -r /usr/src/app/apps/problems/* /problems']
+        command: ['sh', '-c', 'if [ "$(ls -A /dev/problems)" ]; then rm -rf /dev/problems/*; fi && cp -r /usr/src/app/apps/problems/* /dev/problems ']
         volumeMounts:
         - name: problems
-          mountPath: /problems 
+          mountPath: /dev/problems 
       containers:
       - name: main-container
         image: busybox
         command: ['sh', '-c', 'sleep infinity']
         volumeMounts:
         - name: problems
-          mountPath: /problems
+          mountPath: /dev/problems
       volumes:
       - name: problems
         persistentVolumeClaim:
-          claimName: problems-pvc 
+          claimName: problems-pvc
 ---
+
+
+
+
   

@@ -1,7 +1,7 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: judge0-workers-hpa
+  name: judge0-workers
   namespace: default
 spec:
   scaleTargetRef:
@@ -9,7 +9,7 @@ spec:
     kind: Deployment
     name: judge0-workers
   minReplicas: 1
-  maxReplicas: 10
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
