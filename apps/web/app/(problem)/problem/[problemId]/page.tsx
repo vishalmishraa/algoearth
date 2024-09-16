@@ -1,11 +1,11 @@
-import { ProblemStatement } from "../../../../components/ProblemStatement";
-import { ProblemSubmitBar } from "../../../../components/ProblemSubmitBar";
-import { getProblem } from "../../../../controllers/problem";
+import { ProblemDetail } from "@/components/problem-page/ProblemDetail";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@/components/ui/resizable"
+} from "@/components/ui/resizable";
+import { ProblemSubmitBar } from "../../../../components/problem-page/ProblemSubmitBar";
+import { getProblem } from "../../../../controllers/problem";
 
 
 export default async function ProblemPage({
@@ -41,7 +41,7 @@ export default async function ProblemPage({
           <ResizablePanel defaultSize={50}>
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md  px-6 h-ful">
               <div className="prose prose-stone dark:prose-invert h-full ">
-                <ProblemStatement description={problem.description} title={problem.title} tags={problem.tags} />
+                <ProblemDetail problem={problem} />
               </div>
             </div>
           </ResizablePanel>
