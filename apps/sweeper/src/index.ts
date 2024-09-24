@@ -14,17 +14,11 @@ async function updateSubmission(queued_Submission: SubmissionWithTestcases) {
     switch (testcase.status_id) {
       case 1:
       case 2:
-        // 1 => Queue, 2 => Processing
-        // Revisit later if Processing
         isAcceptable = false;
         break;
       case 3:
-        // 3 => Accepted
-        // Check Next
         break;
       default:
-        // ...Others => Errors and UnAccepted
-        // Can break the flow immediately
         isAcceptable = false;
         await db.submission.update({
           where: {
@@ -34,7 +28,7 @@ async function updateSubmission(queued_Submission: SubmissionWithTestcases) {
             status: "REJECTED",
           },
         });
-        return; // Exit early since the flow is broken
+        return;
     }
 
     if (!isAcceptable) {

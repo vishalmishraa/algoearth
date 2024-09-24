@@ -8,7 +8,7 @@ Write a function `calculateFibonacci` that calculates the nth Fibonacci number. 
 
 ### Input
 - `n` (int): A non-negative integer to calculate the nth Fibonacci number.
-
+ 
 ### Output
 - Returns the nth Fibonacci number.
 

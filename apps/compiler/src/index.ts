@@ -99,4 +99,4 @@ app.post('/submissions/batch', async (req, res) => {
 
 app.listen(3005, () => {
     console.log(`compiler service started at PORT : ${3005}`)
-})
+});

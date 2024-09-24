@@ -33,7 +33,6 @@ export default function RootLayout({
           <Providers>
             <Appbar />
             {children}
-            {/* <Footer /> */}
           </Providers>
         </ThemeProvider>
       </body>

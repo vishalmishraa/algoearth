@@ -64,7 +64,7 @@ async function runQueue() {
                     status_id: 2, // in processing,
                     compile_output: 'processing'
                 }
-            })
+            });
 
 
             // Set status to pending
