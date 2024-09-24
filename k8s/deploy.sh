@@ -6,6 +6,7 @@
     GREEN='\033[0;32m'
     BLUE='\033[0;96m'
     RED='\033[0;31m'
+    YELLOW='\033[1;33m'
     NC='\033[0m' # No Color
 
     echo -e "${GREEN}Starting deployment process...${NC}"
@@ -99,7 +100,18 @@
         postgres_nodeport=$(kubectl get svc postgres-service -o jsonpath="{.spec.ports[0].nodePort}")
 
         if [ -n "$postgres_node_ip" ] && [ -n "$postgres_nodeport" ]; then
-            echo -e "${BLUE}Postgres DB URL: ${GREEN}postgresql://postgres:supersecurepassword@$postgres_node_ip:$postgres_nodeport/algoearth?schema=public"
+            DATABASE_URL="postgresql://postgres:supersecurepassword@$postgres_node_ip:$postgres_nodeport/algoearth?schema=public"
+            echo -e "${BLUE}Postgres DB URL: ${GREEN}$postgres_url${NC}"
+
+            # Run Prisma commands
+            echo -e "${BLUE}Running Prisma commands...${NC}"
+            cd ../../packages/db/
+            export DATABASE_URL="$postgres_url"
+            npx prisma generate
+            npx prisma db push
+            npx prisma db seed
+            cd ../../k8s-private/v4/
+            echo -e "${GREEN}Prisma commands completed successfully.${NC}"
         else
             echo -e "${RED}Failed to fetch Postgres NodePort details${NC}"
         fi

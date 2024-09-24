@@ -412,7 +412,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: algoearth1.vishalmishra.tech
+  - host: algoearth.vishalmishra.tech
     http:
       paths:
       - path: /
