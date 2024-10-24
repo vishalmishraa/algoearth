@@ -45,3 +45,4 @@ jobs:
 
       - name: ReDeploy the Web
         run: kubectl rollout restart deployment/algoearth
+        

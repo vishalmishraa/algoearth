@@ -27,3 +27,4 @@ jobs:
 
       - name: Test problems directory
         run: cd apps/boilerplate-generator && npm install && PROBLEMS_DIR_PATH=/home/runner/work/algoearth/algoearth/apps/problems  npm run test
+ 

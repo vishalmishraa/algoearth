@@ -40,4 +40,5 @@ jobs:
 
       - name: Redeploy the web
         run: kubectl rollout restart deployment/compiler
+        
 
