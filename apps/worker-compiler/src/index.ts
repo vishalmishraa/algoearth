@@ -3,6 +3,7 @@ import fs from 'fs';
 import { db } from "./db";
 import Redis from 'ioredis';
 import dotenv from 'dotenv'
+import { Buffer } from 'buffer'
 dotenv.config();
 
 async function checkDBConnection() {
@@ -160,6 +161,13 @@ async function runQueue() {
 }
 
 
+function normalizeAndEncode(str: string): string {
+    // Normalize line endings to \n and trim whitespace
+    const normalized = str.replace(/\r\n/g, '\n').trim();
+    // Convert to base64
+    return Buffer.from(normalized).toString('base64');
+}
+
 async function runCommand(command: string, code: string, language: string, expected_output: string): Promise<{
     stderr?: string;
     timeTaken: number;
@@ -221,7 +229,17 @@ async function runCommand(command: string, code: string, language: string, expec
             }
 
 
-            if (expected_output + '\n' !== stdout) {
+            const encodedExpected = normalizeAndEncode(expected_output);
+            const encodedActual = normalizeAndEncode(stdout);
+
+            if (encodedExpected !== encodedActual) {
+                console.log(`Mismatch detected:`);
+                console.log(`Expected (base64): ${encodedExpected}`);
+                console.log(`Actual (base64): ${encodedActual}`);
+                console.log(`Expected (original): ${expected_output}`);
+                console.log(`Actual (original): ${stdout}`);
+                // Handle the mismatch case
+            
                 console.log(`expected_output: ${expected_output}, stdout: ${stdout}`);
 
                 resolve({
