@@ -126,7 +126,7 @@ export function SubmitProblem({
 
             if (response.data.status != 200) {
                 setStatus(SubmitStatus.FAILED);
-                toast.error("Something went wrong");
+                toast.error(response.data.message);
                 return;
             };
 

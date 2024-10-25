@@ -218,7 +218,7 @@ export async function POST(req: NextRequest) {
         console.log(error.message)
         return NextResponse.json(
             {
-                message: "something went wrong",
+                message: error.message,
                 status: 500
             }
         );
