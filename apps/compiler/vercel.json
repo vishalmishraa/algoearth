@@ -1,5 +1,8 @@
 {
     "version": 2,
+    "env": {
+        "BRANCH": "vercel"
+    },
     "builds": [
       {
         "src": "apps/compiler/src/index.ts",
