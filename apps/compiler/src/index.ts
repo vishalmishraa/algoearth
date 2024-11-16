@@ -33,6 +33,10 @@ db.$connect()
     .catch((error) => console.error('Database connection error:', error));
 
 
+app.get('/', (req, res) => {
+    res.send('Hello World')
+})
+
 
 app.post('/submissions/batch', async (req, res) => {
     try {
@@ -40,7 +44,7 @@ app.post('/submissions/batch', async (req, res) => {
         const jobTokens = [];
 
         for (const problem of problems.submissions) {
-            
+
             const language = COMPILER_LANGUAGE_MAPPING[problem.language_id]?.monaco;
             console.log('languag ==> ', language)
             const jobId = v4();
