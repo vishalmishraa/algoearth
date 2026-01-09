@@ -68,10 +68,24 @@ async function upsertProblemWithRetry(problemSlug: string, problemStatement: str
                 retries++;
                 console.log(`Retrying upsert operation for problem (${retries}/${MAX_RETRIES})...`);
                 await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-            } else if (error.code == 'P2002' && error.meta.modelName == 'Problem' &&  error.meta.target[0] == 'name' ) {
-                throw new Error("Tag exist");
-            }else{
-
+            } else if (error.code == 'P2002' && error.meta?.modelName == 'Tag') {
+                // Tag already exists, this is fine - just continue
+                console.log(`Tag already exists, continuing...`);
+                // Return the problem anyway - tags will be connected via connectOrCreate
+                const existingProblem = await prismaClient.problem.findUnique({
+                    where: { slug: problemSlug }
+                });
+                if (existingProblem) {
+                    return existingProblem;
+                }
+                // If problem doesn't exist, retry the upsert
+                retries++;
+                if (retries >= MAX_RETRIES) {
+                    throw new Error('Failed to upsert problem after handling tag conflict.');
+                }
+                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+                continue;
+            } else {
                 throw error;
             }
         }
