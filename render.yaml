@@ -1,0 +1,99 @@
+services:
+  # Main Web Application (Next.js)
+  - type: web
+    name: algoearth-web
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build:web
+    startCommand: cd apps/web && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: NEXTAUTH_URL
+        sync: false
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JUDGE0_URI
+        sync: false
+      - key: MOUNT_PATH
+        value: /opt/render/project/src/apps/problems
+      - key: NEXT_PUBLIC_CLOUD_FLARE_TURNSTILE_SITE_KEY
+        sync: false
+      - key: CLOUD_FLARE_TURNSTILE_SECRET_KEY
+        sync: false
+      - key: COMPILER_URL
+        sync: false
+      - key: WORKER_URL
+        sync: false
+      - key: SWEEPER_URL
+        sync: false
+
+  # Compiler Service (Express API)
+  - type: web
+    name: algoearth-compiler
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && cd apps/compiler && npm install && npm run build
+    startCommand: cd apps/compiler && node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3005
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SELF_URL
+        sync: false
+
+  # Worker Compiler (Background Worker with HTTP server)
+  - type: web
+    name: algoearth-worker
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && cd apps/worker-compiler && npm install && npm run build
+    startCommand: cd apps/worker-compiler && node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3006
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: WORKER_URL
+        sync: false
+
+  # Sweeper Service (Background Worker with HTTP server)
+  - type: web
+    name: algoearth-sweeper
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && cd apps/sweeper && npm install
+    startCommand: cd apps/sweeper && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3007
+      - key: DATABASE_URL
+        sync: false
+      - key: SWEEPER_URL
+        sync: false
+

@@ -2,8 +2,9 @@ import { exec } from 'child_process';
 import fs from 'fs';
 import { db } from "./db";
 import Redis from 'ioredis';
-import dotenv from 'dotenv'
-import { Buffer } from 'buffer'
+import dotenv from 'dotenv';
+import { Buffer } from 'buffer';
+import http from 'http';
 dotenv.config();
 
 async function checkDBConnection() {
@@ -273,6 +274,57 @@ async function runCommand(command: string, code: string, language: string, expec
             });
         });
     });
+}
+
+// Health check HTTP server for Render
+const PORT = process.env.PORT || 3006;
+let startTime = Date.now();
+let healthCheckCount = 0;
+
+const healthServer = http.createServer((req, res) => {
+    if (req.url === '/health' && req.method === 'GET') {
+        healthCheckCount++;
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            status: 'healthy',
+            service: 'algoearth-worker',
+            uptime: Math.floor((Date.now() - startTime) / 1000),
+            timestamp: new Date().toISOString(),
+            totalChecks: healthCheckCount,
+            redis: redis.status,
+            environment: process.env.NODE_ENV || 'development'
+        }));
+    } else {
+        res.writeHead(404);
+        res.end();
+    }
+});
+
+healthServer.listen(PORT, () => {
+    console.log(`Worker health check server listening on port ${PORT}`);
+});
+
+// Keep-alive mechanism for production
+if (process.env.NODE_ENV === 'production') {
+    const WORKER_URL = process.env.WORKER_URL;
+    
+    if (WORKER_URL) {
+        const pingInterval = setInterval(async () => {
+            try {
+                const response = await fetch(`${WORKER_URL}/health`);
+                const data = await response.json();
+                console.log('✅ Worker keep-alive:', data.status);
+            } catch (error: any) {
+                console.error('❌ Worker keep-alive failed:', error.message);
+            }
+        }, 14 * 60 * 1000); // Ping every 14 minutes
+
+        process.on('SIGTERM', () => {
+            clearInterval(pingInterval);
+        });
+
+        console.log('🔄 Keep-alive mechanism enabled for Worker');
+    }
 }
 
 runQueue();

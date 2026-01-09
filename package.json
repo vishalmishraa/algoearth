@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "build:web": "cd packages/db && npx prisma generate && cd ../../apps/web && npm run build",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "dev:docker": "npm run prisma:docker && npm dev",

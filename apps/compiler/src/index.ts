@@ -96,7 +96,48 @@ app.post('/submissions/batch', async (req, res) => {
     }
 });
 
+// Health check endpoint
+let startTime = Date.now();
+let healthCheckCount = 0;
 
-app.listen(3005, () => {
-    console.log(`compiler service started at PORT : ${3005}`)
+app.get('/health', (req, res) => {
+    healthCheckCount++;
+    res.json({
+        status: 'healthy',
+        service: 'algoearth-compiler',
+        uptime: Math.floor((Date.now() - startTime) / 1000),
+        timestamp: new Date().toISOString(),
+        totalChecks: healthCheckCount,
+        redis: redis.status,
+        environment: process.env.NODE_ENV || 'development'
+    });
 });
+
+const PORT = process.env.PORT || 3005;
+
+app.listen(PORT, () => {
+    console.log(`compiler service started at PORT : ${PORT}`)
+});
+
+// Keep-alive mechanism for production
+if (process.env.NODE_ENV === 'production') {
+    const SELF_URL = process.env.SELF_URL || process.env.COMPILER_URL;
+    
+    if (SELF_URL) {
+        const pingInterval = setInterval(async () => {
+            try {
+                const response = await fetch(`${SELF_URL}/health`);
+                const data = await response.json();
+                console.log('✅ Compiler keep-alive:', data.status);
+            } catch (error: any) {
+                console.error('❌ Compiler keep-alive failed:', error.message);
+            }
+        }, 14 * 60 * 1000); // Ping every 14 minutes
+
+        process.on('SIGTERM', () => {
+            clearInterval(pingInterval);
+        });
+
+        console.log('🔄 Keep-alive mechanism enabled for Compiler');
+    }
+}
