@@ -42,7 +42,9 @@ async function getProblemFullBoilerplateCode(
         if (err) {
           reject(err);
         }
-        resolve(data);
+        // Replace placeholder with actual mount path
+        const processedData = data.replace(/##PROBLEM_FILES_PATH##/g, MOUNT_PATH || '');
+        resolve(processedData);
       },
     );
   });
